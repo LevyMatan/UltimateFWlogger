@@ -1,0 +1,20 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Log</title>
+</head>
+<body>
+    <h1>Add Log</h1>
+    <form action="/add_log" method="post">
+        <label for="timestamp">Timestamp:</label><br>
+        <input type="text" id="timestamp" name="timestamp" required><br>
+        <label for="level">Level:</label><br>
+        <input type="text" id="level" name="level" required><br>
+        <label for="message">Message:</label><br>
+        <textarea id="message" name="message" rows="4" cols="50" required></textarea><br>
+        <button type="submit">Add Log</button>
+    </form>
+</body>
+</html>
