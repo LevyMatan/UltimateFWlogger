@@ -1,6 +1,11 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8"
+        src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log Viewer</title>
@@ -11,56 +16,119 @@
             padding: 0;
             background-color: #f0f0f0;
         }
+
         h1 {
-            background-color: #333;
+            background-color: #000000;
             color: #fff;
             padding: 10px 0;
             margin: 0;
             text-align: center;
         }
+
         table {
             width: 100%;
             margin: 20px 0;
             border-collapse: collapse;
         }
-        th, td {
+
+        th,
+        td {
             border: 1px solid #ddd;
             padding: 8px;
             text-align: left;
         }
+
         tr:nth-child(even) {
             background-color: #f2f2f2;
         }
+
         tr:nth-child(odd) {
             background-color: #e6e6e6;
         }
+
         th {
-            background-color: #4CAF50;
+            background-color: #76b900;
             color: white;
         }
+
+        .table-scrollable {
+            overflow-y: auto;
+            display: block;
+        }
+
+        .highlight {
+            background-color: #ff0;
+        }
+
+        .timestamp,
+        .level {
+            white-space: nowrap;
+        }
+
+        .message {
+            width: 100%;
+        }
+
+        .copy-btn {
+            display: none;
+            position: absolute;
+            background: #76b900;
+            color: #fff;
+            padding: 5px;
+            cursor: pointer;
+        }
+
+        td:hover .copy-btn {
+            display: block;
+        }
     </style>
+    <script>
+        $(document).ready(function () {
+            var table = $('#logTable').DataTable({
+                "pageLength": 100,
+                "autoWidth": false,
+            });
+
+            // Add event listener for search
+            table.on('search.dt', function () {
+                var value = $('.dataTables_filter input').val();
+                $('td').removeClass('highlight');
+                $('td:contains(' + value + ')').addClass('highlight');
+            });
+        });
+        $('td').click(function() {
+            var text = $(this).text();
+            navigator.clipboard.writeText(text).then(function() {
+                alert('Copied to clipboard: ' + text);
+            }).catch(function() {
+                alert('Failed to copy text');
+            });
+        });
+    </script>
 </head>
+
 <body>
     <h1>Log Viewer</h1>
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Timestamp</th>
-                <th>Level</th>
-                <th>Message</th>
-            </tr>
-        </thead>
-        <tbody>
-            {% for log in logs %}
-            <tr>
-                <td>{{ log.id }}</td>
-                <td>{{ log.date }}</td>
-                <td>{{ log.level }}</td>
-                <td>{{ log.log }}</td>
-            </tr>
-            {% endfor %}
-        </tbody>
-    </table>
+    <div class="table-scrollable">
+        <table id="logTable">
+            <thead>
+                <tr>
+                    <th class="timestamp">Timestamp</th>
+                    <th class="level">Level</th>
+                    <th class="message">Message</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for log in logs %}
+                <tr>
+                    <td>{{ log.date }}</td>
+                    <td>{{ log.level }}</td>
+                    <td>{{ log.log }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
 </body>
+
 </html>

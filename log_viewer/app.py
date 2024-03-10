@@ -15,7 +15,7 @@ def index():
 
 @app.route('/logs', methods=['GET'])
 def get_logs():
-    logs = db_thread.get_new_logs()
+    logs = db_thread.get_all_logs()
     return render_template('log_viewer.html', logs=logs)
 
 

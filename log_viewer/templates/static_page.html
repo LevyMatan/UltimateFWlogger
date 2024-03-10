@@ -1,10 +1,43 @@
 <!DOCTYPE html>
 <html>
 <head>
-    <title>Test Static Page</title>
+    <title>NVIDIA</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            text-align: center;
+            background-color: #000;
+            color: #76b900;
+        }
+        .logo {
+            margin-bottom: 20px;
+            width: 200px;
+        }
+        .title {
+            color: #76b900;
+            font-size: 3em;
+            font-weight: bold;
+        }
+        .search-button {
+            margin-top: 20px;
+            padding: 10px 20px;
+            font-size: 16px;
+            background-color: #76b900;
+            color: #000;
+            border: none;
+        }
+    </style>
 </head>
 <body>
-    <h1>Welcome to the Test Static Page</h1>
-    <p>This is a static page for testing purposes.</p>
+    <div>
+        <h1 class="title">PHY LOGGER</h1>
+        <button class="search-button" onclick="window.location.href='/logs';">Go to Logs</button>
+    </div>
 </body>
 </html>
