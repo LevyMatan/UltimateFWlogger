@@ -18,4 +18,4 @@ def get_logs():
 
 if __name__ == '__main__':
     app.run(debug=True, port=8080)
-    # db_thread.close()
+    db_thread.close()
