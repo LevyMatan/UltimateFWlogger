@@ -8,8 +8,6 @@ Two methods:
 
 import time
 import random
-import threading
-import os
 import datetime
 
 from logger_db import DatabaseThread
@@ -30,6 +28,15 @@ class LogGenerator:
         return logs
 
     def write_logs_to_db(self):
+        """
+        Writes logs to the database.
+
+        This method starts a database thread, generates logs, and inserts them into the database.
+        Each log is inserted with a delay of 1 second between each insertion.
+
+        Returns:
+            None
+        """
         self.db_thread.start()
         for log in self.generate_logs():
             self.db_thread.insert_log(log[0], log[1], log[2])
@@ -37,13 +44,26 @@ class LogGenerator:
         self.db_thread.close()
 
     def write_to_shared_log_file(self):
+        """
+        Writes generated logs to a shared log file.
+
+        This method generates logs using the `generate_logs` method and appends them to a shared log file named 'shared_log_file.txt'.
+        Each log entry is written in the format: '<log[0]>,<log[1]>,<log[2]>\n'.
+        The method also introduces a 1-second delay between writing each log entry.
+
+        Parameters:
+            None
+
+        Returns:
+            None
+        """
         for log in self.generate_logs():
-            with open('shared_log_file.txt', 'a') as f:
+            with open('shared_log_file.txt', 'a', encoding='utf-8') as f:
                 f.write(f'{log[0]},{log[1]},{log[2]}\n')
             time.sleep(1)
 
 
-if __name__ == '__main__': 
+if __name__ == '__main__':
     db_thread = DatabaseThread('logs.db')
     log_generator = LogGenerator(db_thread)
     log_generator.write_logs_to_db()
