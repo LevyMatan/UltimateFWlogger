@@ -1,42 +1,36 @@
 from watchdog.observers import Observer
 from watchdog.events import FileSystemEventHandler
+from logger_db import DatabaseThread
 import datetime
-import sqlite3
 import time
 
 class MyHandler(FileSystemEventHandler):
     def __init__(self):
         self.last_position = 0
+        self.log_id = 0
+        self.db_thread = DatabaseThread('logs.db')
+        self.db_thread.start()
 
     def on_modified(self, event):
-        # Connect to the SQLite database
-        conn = sqlite3.connect('logs.db')
-        c = conn.cursor()
-
         with open('shared_log_file.txt', 'r') as f:
             # Move to the last read position
             f.seek(self.last_position)
             lines = f.readlines()
             for line in lines:
                 # Insert a row of data
-                c.execute("INSERT INTO logs VALUES (?, ?)", (str(datetime.datetime.now()), line))
-                print(f'Added the line "{line}" to the database')
+                line = line.split(',')
+                timestamp = line[0]
+                level = line[1]
+                message = line[2]
+                self.db_thread.insert_log(self.log_id, timestamp, level, message)
+                self.log_id += 1
 
-            # Save the last position
+        # Update the last read position
+        with open('shared_log_file.txt', 'r') as f:
             self.last_position = f.tell()
 
-        # Save (commit) the changes
-        conn.commit()
-        # Close the connection
-        conn.close()
-
-
-# Innitialize the loggs database
-conn = sqlite3.connect('logs.db')
-c = conn.cursor()
-c.execute('''CREATE TABLE IF NOT EXISTS logs (date text, log text)''')
-conn.commit()
-conn.close()
+    def close(self):
+        self.db_thread.close()
 
 event_handler = MyHandler()
 observer = Observer()
@@ -48,4 +42,5 @@ try:
         time.sleep(1)
 except KeyboardInterrupt:
     observer.stop()
+    event_handler.close()
 observer.join()
