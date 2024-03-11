@@ -90,7 +90,7 @@ class DatabaseThread(threading.Thread):
             None
         """
         if operator == '==':
-            self.query = self.query.filter(getattr(Log, attribute) == value)
+            self.query = self.query.filter(getattr(Log, attribute).like('%' + value + '%'))
         elif operator == '!=':
             self.query = self.query.filter(getattr(Log, attribute) != value)
 

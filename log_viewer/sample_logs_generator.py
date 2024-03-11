@@ -48,7 +48,8 @@ class LogGenerator:
             file = random.choice(self.files)
             line = random.randint(1, 1000)
             src_function_name = f'function_{random.randint(1, 10)}'
-            message = f'This is a {level} message from {file} at {date}'
+            # get a random message from the internet, should be up to 15 words
+            message = ' '.join(random.sample(['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', 'at', 'midnight', 'in', 'the', 'forest'], random.randint(1, 5)))
             logs[i] = (date, file, line, src_function_name, level, message)
         return logs
 

@@ -87,65 +87,82 @@
         }
     </style>
     <script>
+        // $(document).ready(function () {
+        //     var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'msg']
+
+        //     var table = $('#logTable').DataTable({
+        //         "pageLength": 25,
+        //         "autoWidth": false,
+        //         "stripeClasses": ['odd-row', 'even-row'],
+        //         "initComplete": function () {
+        //             this.api().columns().every(function (index) {
+        //                 var column = this;
+        //                 var select = $('<select><option value=""></option></select>')
+        //                     .appendTo($(column.header()).empty())
+        //                     .on('change', function () {
+        //                         var val = $.fn.dataTable.util.escapeRegex(
+        //                             $(this).val()
+        //                         );
+        //                         var columnName = columNames[index];
+        //                         if (columnName === 'file') {
+        //                             val = val.split(".")[0];
+        //                         }
+        //                         // if last char is "/" remove it
+        //                         if (val.slice(-1) === "\\") {
+        //                             val = val.slice(0, -1);
+        //                         }
+        //                         console.log('Filter request sent');
+        //                         console.log('/logs/filter/' + columnName + '/' + val);
+        //                         column
+        //                             .search(val ? '^' + val + '$' : '', true, false)
+        //                             .draw();
+
+        //                         $.get('/logs/filter/' + columnName + '/' + val);
+        //                     });
+
+        //                 column.data().unique().sort().each(function (d, j) {
+        //                     select.append('<option value="' + d + '">' + d + '</option>')
+        //                 });
+        //             });
+        //         }
+        //     });
+        //     // Initialize the autocomplete widgets
+        //     $('.column-filter').each(function () {
+        //         var column = table.column($(this).data('column'));
+        //         var columnName = $(this).attr('id').replace('-filter', '');
+
+        //         $.getJSON('/unique/' + columnName, function(data) {
+        //             $('#' + columnName + '-filter').autocomplete({
+        //                 source: data,
+        //                 select: function (event, ui) {
+        //                     column.search(ui.item.value).draw();
+        //                     $.get('/filters/' + columnName + '/' + ui.item.value);
+        //                 }
+        //             });
+        //         });
+        //     });
         $(document).ready(function () {
             var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'msg']
 
             var table = $('#logTable').DataTable({
                 "pageLength": 25,
                 "autoWidth": false,
-                "stripeClasses": ['odd-row', 'even-row'],
-                "initComplete": function () {
-                    this.api().columns().every(function (index) {
-                        var column = this;
-                        var select = $('<select><option value=""></option></select>')
-                            .appendTo($(column.header()).empty())
-                            .on('change', function () {
-                                var val = $.fn.dataTable.util.escapeRegex(
-                                    $(this).val()
-                                );
-                                var columnName = columNames[index];
-                                if (columnName === 'file') {
-                                    val = val.split(".")[0];
-                                }
-                                // if last char is "/" remove it
-                                if (val.slice(-1) === "\\") {
-                                    val = val.slice(0, -1);
-                                }
-                                console.log('Filter request sent');
-                                console.log('/logs/filter/' + columnName + '/' + val);
-                                column
-                                    .search(val ? '^' + val + '$' : '', true, false)
-                                    .draw();
-
-                                $.get('/logs/filter/' + columnName + '/' + val);
-                            });
-
-                        column.data().unique().sort().each(function (d, j) {
-                            select.append('<option value="' + d + '">' + d + '</option>')
-                        });
-                    });
-                }
+                "stripeClasses": ['odd-row', 'even-row']
             });
-
-            // Add event listener for search
-            // table.on('search.dt', function () {
-            //     var value = $('.dataTables_filter input').val();
-            //     $('td').removeClass('highlight');
-            //     $('td:contains(' + value + ')').addClass('highlight');
-            // });
 
             // Initialize the autocomplete widgets
             $('.column-filter').each(function () {
                 var column = table.column($(this).data('column'));
-                var autocompleteSource = Array.from(column.data().unique());
+                var columnName = $(this).attr('data-name');
 
-                $(this).autocomplete({
-                    source: autocompleteSource,
-                    select: function (event, ui) {
-                        column.search(ui.item.value).draw();
-
-                        // Write to console we sent a filter request
-                    }
+                $.getJSON('/unique/' + columnName, function(data) {
+                    $('#' + columnName + '-filter').autocomplete({
+                        source: data,
+                        select: function (event, ui) {
+                            column.search(ui.item.value).draw();
+                            $.get('/logs/filters/' + columnName + '/' + ui.item.value);
+                        }
+                    });
                 });
             });
         });
@@ -166,8 +183,8 @@
                 </tr>
                 <tr>
                     <th></th>
-                    <th><input data-name="file" type="text" id="source-filter" class="column-filter" data-column="1"></th>
-                    <th><input data-name="src_function_name" type="text" id="function-filter" class="column-filter" data-column="2"></th>
+                    <th><input data-name="file" type="text" id="file-filter" class="column-filter" data-column="1"></th>
+                    <th><input data-name="src_function_name" type="text" id="src_function_name-filter" class="column-filter" data-column="2"></th>
                     <th><input data-name="level" type="text" id="level-filter" class="column-filter" data-column="3"></th>
                     <th></th>
                 </tr>

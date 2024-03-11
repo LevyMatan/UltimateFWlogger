@@ -1,13 +1,13 @@
-from flask import Flask, render_template
-from logger_db import DatabaseThread
+from flask import Flask, render_template, jsonify
+from logger_db import DatabaseThread, Log
 import webbrowser
 import os
-
+from sample_logs_generator import LogGenerator
 app = Flask(__name__)
 
 db_thread = DatabaseThread('logs.db')
-db_thread.start()
-
+gen = LogGenerator(db_thread, 1000)
+gen.write_logs_to_db()
 
 @app.route('/', methods=['GET'])
 def index():
@@ -41,6 +41,10 @@ def get_logs():
     logs = db_thread.get_all_logs()
     return render_template('log_viewer.html', logs=logs)
 
+@app.route('/unique/<column>')
+def get_unique_values(column):
+    unique_values = db_thread.session.query(getattr(Log, column)).distinct().all()
+    return jsonify([value[0] for value in unique_values])
 
 if __name__ == '__main__':
     url = "http://localhost:8080/"
