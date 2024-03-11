@@ -88,12 +88,14 @@
     </style>
     <script>
         $(document).ready(function () {
+            var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'msg']
+
             var table = $('#logTable').DataTable({
-                "pageLength": 100,
+                "pageLength": 25,
                 "autoWidth": false,
                 "stripeClasses": ['odd-row', 'even-row'],
                 "initComplete": function () {
-                    this.api().columns().every(function () {
+                    this.api().columns().every(function (index) {
                         var column = this;
                         var select = $('<select><option value=""></option></select>')
                             .appendTo($(column.header()).empty())
@@ -101,19 +103,20 @@
                                 var val = $.fn.dataTable.util.escapeRegex(
                                     $(this).val()
                                 );
-
+                                var columnName = columNames[index];
+                                if (columnName === 'file') {
+                                    val = val.split(".")[0];
+                                }
+                                // if last char is "/" remove it
+                                if (val.slice(-1) === "\\") {
+                                    val = val.slice(0, -1);
+                                }
+                                console.log('Filter request sent');
+                                console.log('/logs/filter/' + columnName + '/' + val);
                                 column
                                     .search(val ? '^' + val + '$' : '', true, false)
                                     .draw();
 
-                                var columnName = column.header().innerHTML.toLowerCase().trim();
-                                // if column is file, strip the line numbers
-
-                                if (columnName === 'source') {
-                                    val = val.split(':')[0];
-                                }
-                                console.log('Filter request sent');
-                                console.log('/logs/filter/' + columnName + '/' + val);
                                 $.get('/logs/filter/' + columnName + '/' + val);
                             });
 
@@ -155,17 +158,17 @@
         <table id="logTable">
             <thead>
                 <tr>
-                    <th class="timestamp">Timestamp</th>
-                    <th class="source">Source</th>
-                    <th class="function">Function</th>
-                    <th class="level">Level</th>
-                    <th class="message">Message</th>
+                    <th data-name="timestamp"class="timestamp">Timestamp</th>
+                    <th data-name="file"class="source">Source</th>
+                    <th data-name="src_function_name"class="function">Function</th>
+                    <th data-name="level"class="level">Level</th>
+                    <th data-name="msg"class="message">Message</th>
                 </tr>
                 <tr>
                     <th></th>
-                    <th><input type="text" id="source-filter" class="column-filter" data-column="1"></th>
-                    <th><input type="text" id="function-filter" class="column-filter" data-column="2"></th>
-                    <th><input type="text" id="level-filter" class="column-filter" data-column="3"></th>
+                    <th><input data-name="file" type="text" id="source-filter" class="column-filter" data-column="1"></th>
+                    <th><input data-name="src_function_name" type="text" id="function-filter" class="column-filter" data-column="2"></th>
+                    <th><input data-name="level" type="text" id="level-filter" class="column-filter" data-column="3"></th>
                     <th></th>
                 </tr>
             </thead>
