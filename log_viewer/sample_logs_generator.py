@@ -9,7 +9,6 @@ Two methods:
 import time
 import random
 import datetime
-
 from logger_db import DatabaseThread
 
 class LogGenerator:
@@ -32,15 +31,16 @@ class LogGenerator:
         self.levels = ['INFO', 'WARNING', 'ERROR']
         self.files = ['fileA.c', 'fileB.c', 'fileC.c']
 
-    def generate_logs(self):
+
+    def generate_logs(self, num_of_logs=1000):
         """
         Generates a list of logs.
 
         Returns:
             list: A list of logs, where each log is a tuple containing the log information.
         """
-        logs = [tuple] * 100
-        for i in range(100):
+        logs = [tuple] * num_of_logs
+        for i in range(num_of_logs):
             date = datetime.datetime.now()
             level = random.choice(self.levels)
             file = random.choice(self.files)
@@ -63,7 +63,8 @@ class LogGenerator:
         self.db_thread.start()
         for log in self.generate_logs():
             self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5])
-            time.sleep(1)
+            delay = random.uniform(0, 0.01)
+            time.sleep(delay)
         self.db_thread.close()
 
     def write_to_shared_log_file(self):
@@ -72,7 +73,7 @@ class LogGenerator:
 
         This method generates logs using the `generate_logs` method and appends them to a shared log file named 'shared_log_file.txt'.
         Each log entry is written in the format: '<log[0]>,<log[1]>,<log[2]>\n'.
-        The method also introduces a 1-second delay between writing each log entry.
+        The method also introduces a random delay between writing each log entry, ranging from 0 to 0.5 seconds.
 
         Parameters:
             None
@@ -83,12 +84,13 @@ class LogGenerator:
         for log in self.generate_logs():
             with open('shared_log_file.txt', 'a', encoding='utf-8') as f:
                 f.write(f'{log[0]},{log[1]},{log[2]},{log[3]},{log[4]},{log[5]}\n')
-            time.sleep(1)
+            delay = random.uniform(0, 0.01)
+            time.sleep(delay)
 
 
 if __name__ == '__main__':
     db_thread = DatabaseThread('logs.db')
     log_generator = LogGenerator(db_thread)
     log_generator.write_logs_to_db()
-    log_generator.write_to_shared_log_file()
+    # log_generator.write_to_shared_log_file()
     db_thread.close()

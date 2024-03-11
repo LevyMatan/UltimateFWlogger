@@ -49,6 +49,7 @@ class DatabaseThread(threading.Thread):
                 self.log_id = self.session.query(Log).order_by(Log.id.desc()).first().id
                 self.log_id += 1
         self.last_read_id = 0
+        self.query = self.session.query(Log)
 
     def insert_log(self, timestamp, file, line, src_function_name, level, msg):
         """
@@ -67,6 +68,33 @@ class DatabaseThread(threading.Thread):
         self.session.commit()
         self.log_id += 1
 
+        # Check if total logs is greater than 20000
+        total_logs = self.session.query(Log).count()
+        if total_logs > 20000:
+            # Get the first 10000 logs
+            logs_to_delete = self.session.query(Log).order_by(asc(Log.id)).limit(10000)
+            for log in logs_to_delete:
+                self.session.delete(log)
+            self.session.commit()
+
+    def set_logs_filter(self, attribute, value, operator='=='):
+        """
+        Set the filter for the logs.
+
+        Args:
+            attribute (str): The attribute to filter on: 'level', 'file', 'src_function_name'.
+            value (str): The value to filter on.
+            operator (str): The operator to use for the filter (e.g., '==', '!=').
+
+        Returns:
+            None
+        """
+        if operator == '==':
+            self.query = self.query.filter(getattr(Log, attribute) == value)
+        elif operator == '!=':
+            self.query = self.query.filter(getattr(Log, attribute) != value)
+
+
     def get_all_logs(self):
             """
             Retrieve all logs from the database.
@@ -74,7 +102,7 @@ class DatabaseThread(threading.Thread):
             Returns:
                 A list of Log objects representing all the logs in the database.
             """
-            return self.session.query(Log).all()
+            return self.query.all()
 
     def get_new_logs(self):
             """

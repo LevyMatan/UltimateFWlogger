@@ -6,6 +6,8 @@
     <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script type="text/javascript" charset="utf8"
         src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
+    <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log Viewer</title>
@@ -90,21 +92,50 @@
                 "pageLength": 100,
                 "autoWidth": false,
                 "stripeClasses": ['odd-row', 'even-row'],
+                "initComplete": function () {
+                    this.api().columns().every(function () {
+                        var column = this;
+                        var select = $('<select><option value=""></option></select>')
+                            .appendTo($(column.header()).empty())
+                            .on('change', function () {
+                                var val = $.fn.dataTable.util.escapeRegex(
+                                    $(this).val()
+                                );
+
+                                column
+                                    .search(val ? '^' + val + '$' : '', true, false)
+                                    .draw();
+                            });
+
+                        column.data().unique().sort().each(function (d, j) {
+                            select.append('<option value="' + d + '">' + d + '</option>')
+                        });
+                    });
+                }
             });
 
             // Add event listener for search
-            table.on('search.dt', function () {
-                var value = $('.dataTables_filter input').val();
-                $('td').removeClass('highlight');
-                $('td:contains(' + value + ')').addClass('highlight');
-            });
-        });
-        $('td').click(function() {
-            var text = $(this).text();
-            navigator.clipboard.writeText(text).then(function() {
-                alert('Copied to clipboard: ' + text);
-            }).catch(function() {
-                alert('Failed to copy text');
+            // table.on('search.dt', function () {
+            //     var value = $('.dataTables_filter input').val();
+            //     $('td').removeClass('highlight');
+            //     $('td:contains(' + value + ')').addClass('highlight');
+            // });
+
+            // Initialize the autocomplete widgets
+            $('.column-filter').each(function () {
+                var column = table.column($(this).data('column'));
+                var autocompleteSource = Array.from(column.data().unique());
+
+                $(this).autocomplete({
+                    source: autocompleteSource,
+                    select: function (event, ui) {
+                        column.search(ui.item.value).draw();
+                        console.log('Filter request sent');
+                        console.log('/logs/filter/' + columnName + '/' + ui.item.value);
+                        $.get('/logs/filter/' + columnName + '/' + ui.item.value);
+                        // Write to console we sent a filter request
+                    }
+                });
             });
         });
     </script>
@@ -121,6 +152,13 @@
                     <th class="function">Function</th>
                     <th class="level">Level</th>
                     <th class="message">Message</th>
+                </tr>
+                <tr>
+                    <th></th>
+                    <th><input type="text" id="source-filter" class="column-filter" data-column="1"></th>
+                    <th><input type="text" id="function-filter" class="column-filter" data-column="2"></th>
+                    <th><input type="text" id="level-filter" class="column-filter" data-column="3"></th>
+                    <th></th>
                 </tr>
             </thead>
             <tbody>

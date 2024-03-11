@@ -13,6 +13,22 @@ db_thread.start()
 def index():
     return render_template('static_page.html')
 
+@app.route('/logs/filter/<attribute>/<value>/', methods=['GET'])
+def set_log_filter(attribute, value, operator='=='):
+    """
+    Set the filter for the logs.
+
+    Args:
+        attribute (str): The attribute to filter on: 'level', 'file', 'src_function_name'.
+        value (str): The value to filter on.
+        operator (str): The operator to use for the filter (e.g., '==', '!=').
+
+    Returns:
+        None
+    """
+    db_thread.set_logs_filter(attribute, value, operator)
+    print(f'Filter set: {attribute} {operator} {value}')
+    get_logs()
 
 @app.route('/logs', methods=['GET'])
 def get_logs():
