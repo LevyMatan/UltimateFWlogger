@@ -17,6 +17,7 @@ class Log(Base):
         timestamp (str): The timestamp of when the log entry was created.
         file (str): The file name associated with the log entry.
         line (int): The line number in the file where the log entry occurred.
+        src_function_name (str): The name of the function where the log entry occurred.
         level (str): The log level of the entry (e.g., INFO, WARNING, ERROR).
         msg (str): The log message.
     """
@@ -26,6 +27,7 @@ class Log(Base):
     timestamp = Column(Integer)
     file = Column(String)
     line = Column(Integer)
+    src_function_name = Column(String)
     level = Column(String)
     msg = Column(String)
 
@@ -48,7 +50,7 @@ class DatabaseThread(threading.Thread):
                 self.log_id += 1
         self.last_read_id = 0
 
-    def insert_log(self, timestamp, file, line, level, msg):
+    def insert_log(self, timestamp, file, line, src_function_name, level, msg):
         """
         Inserts a new log entry into the database.
 
@@ -60,7 +62,7 @@ class DatabaseThread(threading.Thread):
         Returns:
             None
         """
-        new_log = Log(id=self.log_id, timestamp=timestamp, file=file, line=line, level=level, msg=msg)
+        new_log = Log(id=self.log_id, timestamp=timestamp, file=file, line=line, src_function_name=src_function_name, level=level, msg=msg)
         self.session.add(new_log)
         self.session.commit()
         self.log_id += 1

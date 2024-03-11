@@ -45,8 +45,9 @@ class LogGenerator:
             level = random.choice(self.levels)
             file = random.choice(self.files)
             line = random.randint(1, 1000)
+            src_function_name = f'function_{random.randint(1, 10)}'
             message = f'This is a {level} message from {file} at {date}'
-            logs[i] = (date, file, line, level, message)
+            logs[i] = (date, file, line, src_function_name, level, message)
         return logs
 
     def write_logs_to_db(self):
@@ -61,7 +62,7 @@ class LogGenerator:
         """
         self.db_thread.start()
         for log in self.generate_logs():
-            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4])
+            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5])
             time.sleep(1)
         self.db_thread.close()
 
@@ -81,7 +82,7 @@ class LogGenerator:
         """
         for log in self.generate_logs():
             with open('shared_log_file.txt', 'a', encoding='utf-8') as f:
-                f.write(f'{log[0]},{log[1]},{log[2]},{log[3]},{log[4]}\n')
+                f.write(f'{log[0]},{log[1]},{log[2]},{log[3]},{log[4]},{log[5]}\n')
             time.sleep(1)
 
 

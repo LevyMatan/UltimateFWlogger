@@ -1,6 +1,7 @@
 from flask import Flask, render_template
 from logger_db import DatabaseThread
 import webbrowser
+import os
 
 app = Flask(__name__)
 
@@ -30,3 +31,5 @@ if __name__ == '__main__':
     webbrowser.open(url, new=2)  # open in new tab, if possible
     app.run(debug=True, port=8080)
     db_thread.close()
+    # Delete the DB file
+    os.remove('logs.db')
