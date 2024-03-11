@@ -105,6 +105,16 @@
                                 column
                                     .search(val ? '^' + val + '$' : '', true, false)
                                     .draw();
+
+                                var columnName = column.header().innerHTML.toLowerCase().trim();
+                                // if column is file, strip the line numbers
+
+                                if (columnName === 'source') {
+                                    val = val.split(':')[0];
+                                }
+                                console.log('Filter request sent');
+                                console.log('/logs/filter/' + columnName + '/' + val);
+                                $.get('/logs/filter/' + columnName + '/' + val);
                             });
 
                         column.data().unique().sort().each(function (d, j) {
@@ -130,9 +140,7 @@
                     source: autocompleteSource,
                     select: function (event, ui) {
                         column.search(ui.item.value).draw();
-                        console.log('Filter request sent');
-                        console.log('/logs/filter/' + columnName + '/' + ui.item.value);
-                        $.get('/logs/filter/' + columnName + '/' + ui.item.value);
+
                         // Write to console we sent a filter request
                     }
                 });

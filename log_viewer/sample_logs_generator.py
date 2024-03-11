@@ -9,6 +9,8 @@ Two methods:
 import time
 import random
 import datetime
+import argparse
+
 from logger_db import DatabaseThread
 
 class LogGenerator:
@@ -26,21 +28,21 @@ class LogGenerator:
         write_to_shared_log_file(): Writes logs to a shared log file.
     """
 
-    def __init__(self, db_thread):
+    def __init__(self, db_thread, num_of_logs=1000):
         self.db_thread = db_thread
         self.levels = ['INFO', 'WARNING', 'ERROR']
         self.files = ['fileA.c', 'fileB.c', 'fileC.c']
+        self.num_of_logs = num_of_logs
 
-
-    def generate_logs(self, num_of_logs=1000):
+    def generate_logs(self):
         """
         Generates a list of logs.
 
         Returns:
             list: A list of logs, where each log is a tuple containing the log information.
         """
-        logs = [tuple] * num_of_logs
-        for i in range(num_of_logs):
+        logs = [tuple] * self.num_of_logs
+        for i in range(self.num_of_logs):
             date = datetime.datetime.now()
             level = random.choice(self.levels)
             file = random.choice(self.files)
@@ -89,8 +91,19 @@ class LogGenerator:
 
 
 if __name__ == '__main__':
+
+    parser = argparse.ArgumentParser(description='Generate logs.')
+    parser.add_argument('--write_to', default='sql_db', choices=['txt_log_file', 'sql_db'], help='Destination of writing logs')
+    parser.add_argument('--num_of_logs', type=int, default=1000, help='Number of logs to generate')
+
+    args = parser.parse_args()
+    print(f'numm_of_logs: {args.num_of_logs}')
+
     db_thread = DatabaseThread('logs.db')
-    log_generator = LogGenerator(db_thread)
-    log_generator.write_logs_to_db()
-    # log_generator.write_to_shared_log_file()
+    log_generator = LogGenerator(db_thread, num_of_logs=args.num_of_logs)
+    if args.write_to == 'sql_db':
+        log_generator.write_logs_to_db()
+    elif args.write_to == 'txt_log_file':
+        log_generator.write_to_shared_log_file()
+
     db_thread.close()
