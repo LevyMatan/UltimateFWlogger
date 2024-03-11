@@ -38,12 +38,12 @@
             text-align: left;
         }
 
-        tr:nth-child(even) {
-            background-color: #f2f2f2;
+        .odd-row {
+            background-color: #e6e6e6 !important;
         }
 
-        tr:nth-child(odd) {
-            background-color: #e6e6e6;
+        .even-row {
+            background-color: #f2f2f2 !important;
         }
 
         th {
@@ -62,7 +62,8 @@
 
         .timestamp,
         .level,
-        .source {
+        .source,
+        .function{
             white-space: nowrap;
         }
 
@@ -88,6 +89,7 @@
             var table = $('#logTable').DataTable({
                 "pageLength": 100,
                 "autoWidth": false,
+                "stripeClasses": ['odd-row', 'even-row'],
             });
 
             // Add event listener for search
@@ -109,13 +111,14 @@
 </head>
 
 <body>
-    <h1>Log Viewer</h1>
+    <h1>Ultimate Log Viewer</h1>
     <div class="table-scrollable">
         <table id="logTable">
             <thead>
                 <tr>
                     <th class="timestamp">Timestamp</th>
                     <th class="source">Source</th>
+                    <th class="function">Function</th>
                     <th class="level">Level</th>
                     <th class="message">Message</th>
                 </tr>
@@ -125,6 +128,7 @@
                 <tr>
                     <td>{{ log.timestamp }}</td>
                     <td>{{ log.file }}:{{ log.line }}</td>
+                    <td>{{ log.src_function_name }}</td>
                     <td>{{ log.level }}</td>
                     <td>{{ log.msg }}</td>
                 </tr>
