@@ -2,11 +2,22 @@ $(document).ready(function () {
     var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'msg']
 
     var table = $('#logTable').DataTable({
-        "pageLength": 25,
+        "pageLength": 1000,
         "autoWidth": false,
+        "scrollY": "97%",
+        "scrollCollapse": false,
         "stripeClasses": ['odd-row', 'even-row'],
+        "ajax": "/latest_logs",
+        "order": [[0, "desc"]],
+        "columns": [
+            { "data": "timestamp" },
+            { "data": "file_line" },
+            { "data": "src_function_name" },
+            { "data": "level" },
+            { "data": "msg" }
+        ],
         "columnDefs": [
-            { "orderable": false, "targets": [1, 2, 3, 4] } // Disables sorting on the 2nd, 3rd and 5th columns (0-indexed)
+            { "orderable": false, "targets": [1, 2, 3, 4] }
         ],
     });
 
@@ -25,5 +36,11 @@ $(document).ready(function () {
                 }
             });
         });
+    });
+
+    // Add click event handler for the filter button
+    $('#apply-filter').click(function () {
+        var filterValue = $('#msg-filter').val();
+        table.column(4).search(filterValue).draw();
     });
 });
