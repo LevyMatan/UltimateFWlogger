@@ -3,170 +3,17 @@
 
 <head>
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
-    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
-    <script type="text/javascript" charset="utf8"
-        src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+    <link rel="stylesheet" href="{{ url_for('static', filename='styles.css') }}">
+    <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
+    <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-color/2.1.2/jquery.color.min.js"></script>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Log Viewer</title>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            margin: 0;
-            padding: 0;
-            background-color: #f0f0f0;
-        }
-
-        h1 {
-            background-color: #000000;
-            color: #fff;
-            padding: 10px 0;
-            margin: 0;
-            text-align: center;
-        }
-
-        table {
-            width: 100%;
-            margin: 20px 0;
-            border-collapse: collapse;
-        }
-
-        th,
-        td {
-            border: 1px solid #ddd;
-            padding: 8px;
-            text-align: left;
-        }
-
-        .odd-row {
-            background-color: #e6e6e6 !important;
-        }
-
-        .even-row {
-            background-color: #f2f2f2 !important;
-        }
-
-        th {
-            background-color: #76b900;
-            color: white;
-        }
-
-        .table-scrollable {
-            overflow-y: auto;
-            display: block;
-        }
-
-        .highlight {
-            background-color: #ff0;
-        }
-
-        .timestamp,
-        .level,
-        .source,
-        .function{
-            white-space: nowrap;
-        }
-
-        .message {
-            width: 100%;
-        }
-
-        .copy-btn {
-            display: none;
-            position: absolute;
-            background: #76b900;
-            color: #fff;
-            padding: 5px;
-            cursor: pointer;
-        }
-
-        td:hover .copy-btn {
-            display: block;
-        }
-    </style>
-    <script>
-        // $(document).ready(function () {
-        //     var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'msg']
-
-        //     var table = $('#logTable').DataTable({
-        //         "pageLength": 25,
-        //         "autoWidth": false,
-        //         "stripeClasses": ['odd-row', 'even-row'],
-        //         "initComplete": function () {
-        //             this.api().columns().every(function (index) {
-        //                 var column = this;
-        //                 var select = $('<select><option value=""></option></select>')
-        //                     .appendTo($(column.header()).empty())
-        //                     .on('change', function () {
-        //                         var val = $.fn.dataTable.util.escapeRegex(
-        //                             $(this).val()
-        //                         );
-        //                         var columnName = columNames[index];
-        //                         if (columnName === 'file') {
-        //                             val = val.split(".")[0];
-        //                         }
-        //                         // if last char is "/" remove it
-        //                         if (val.slice(-1) === "\\") {
-        //                             val = val.slice(0, -1);
-        //                         }
-        //                         console.log('Filter request sent');
-        //                         console.log('/logs/filter/' + columnName + '/' + val);
-        //                         column
-        //                             .search(val ? '^' + val + '$' : '', true, false)
-        //                             .draw();
-
-        //                         $.get('/logs/filter/' + columnName + '/' + val);
-        //                     });
-
-        //                 column.data().unique().sort().each(function (d, j) {
-        //                     select.append('<option value="' + d + '">' + d + '</option>')
-        //                 });
-        //             });
-        //         }
-        //     });
-        //     // Initialize the autocomplete widgets
-        //     $('.column-filter').each(function () {
-        //         var column = table.column($(this).data('column'));
-        //         var columnName = $(this).attr('id').replace('-filter', '');
-
-        //         $.getJSON('/unique/' + columnName, function(data) {
-        //             $('#' + columnName + '-filter').autocomplete({
-        //                 source: data,
-        //                 select: function (event, ui) {
-        //                     column.search(ui.item.value).draw();
-        //                     $.get('/filters/' + columnName + '/' + ui.item.value);
-        //                 }
-        //             });
-        //         });
-        //     });
-        $(document).ready(function () {
-            var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'msg']
-
-            var table = $('#logTable').DataTable({
-                "pageLength": 25,
-                "autoWidth": false,
-                "stripeClasses": ['odd-row', 'even-row']
-            });
-
-            // Initialize the autocomplete widgets
-            $('.column-filter').each(function () {
-                var column = table.column($(this).data('column'));
-                var columnName = $(this).attr('data-name');
-
-                $.getJSON('/unique/' + columnName, function(data) {
-                    $('#' + columnName + '-filter').autocomplete({
-                        source: data,
-                        select: function (event, ui) {
-                            column.search(ui.item.value).draw();
-                            $.get('/logs/filters/' + columnName + '/' + ui.item.value);
-                        }
-                    });
-                });
-            });
-        });
-    </script>
 </head>
 
 <body>
@@ -202,6 +49,7 @@
             </tbody>
         </table>
     </div>
+    <script src="{{ url_for('static', filename='scripts.js') }}"></script>
 </body>
 
 </html>

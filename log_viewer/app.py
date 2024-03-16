@@ -6,11 +6,17 @@ from sample_logs_generator import LogGenerator
 app = Flask(__name__)
 
 db_thread = DatabaseThread('logs.db')
-gen = LogGenerator(db_thread, 1000)
+gen = LogGenerator(db_thread, 100)
 gen.write_logs_to_db()
 
 @app.route('/', methods=['GET'])
 def index():
+    """
+    Renders the static_page.html template.
+
+    Returns:
+        The rendered static_page.html template.
+    """
     return render_template('static_page.html')
 
 @app.route('/logs/filter/<attribute>/<value>', methods=['GET'])
@@ -39,10 +45,30 @@ def get_logs():
         The rendered template with the logs.
     """
     logs = db_thread.get_all_logs()
-    return render_template('log_viewer.html', logs=logs)
+    # set an array of 5 colors for highlighting:
+    colors = [# light blue
+              '#ADD8E6',
+              # light green
+              '#90EE90',
+              # light yellow
+              '#FFFFE0',
+              # light pink
+              '#FFB6C1',
+              # light orange
+              '#FFD700']
+    return render_template('log_viewer.html', logs=logs, colors=colors)
 
 @app.route('/unique/<column>')
 def get_unique_values(column):
+    """
+    Retrieve unique values from a specific column in the database.
+
+    Args:
+        column (str): The name of the column to retrieve unique values from.
+
+    Returns:
+        list: A list of unique values from the specified column.
+    """
     unique_values = db_thread.session.query(getattr(Log, column)).distinct().all()
     return jsonify([value[0] for value in unique_values])
 

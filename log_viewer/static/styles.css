@@ -1,0 +1,73 @@
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+    background-color: #f0f0f0;
+}
+
+h1 {
+    background-color: #000000;
+    color: #fff;
+    padding: 10px 0;
+    margin: 0;
+    text-align: center;
+}
+
+table {
+    width: 100%;
+    margin: 20px 0;
+    border-collapse: collapse;
+}
+
+th,
+td {
+    border: 1px solid #ddd;
+    padding: 8px;
+    text-align: left;
+}
+
+.odd-row {
+    background-color: #e6e6e6 !important;
+}
+
+.even-row {
+    background-color: #f2f2f2 !important;
+}
+
+th {
+    background-color: #76b900;
+    color: white;
+}
+
+.table-scrollable {
+    overflow-y: auto;
+    display: block;
+}
+
+.highlight {
+    background-color: #ff0;
+}
+
+.timestamp,
+.level,
+.source,
+.function{
+    white-space: nowrap;
+}
+
+.message {
+    width: 100%;
+}
+
+.copy-btn {
+    display: none;
+    position: absolute;
+    background: #76b900;
+    color: #fff;
+    padding: 5px;
+    cursor: pointer;
+}
+
+td:hover .copy-btn {
+    display: block;
+}
