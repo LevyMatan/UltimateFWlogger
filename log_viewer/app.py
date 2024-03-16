@@ -17,7 +17,7 @@ def index():
     Returns:
         The rendered static_page.html template.
     """
-    return render_template('static_page.html')
+    return render_template('landing_page.html')
 
 @app.route('/logs/filter/<attribute>/<value>', methods=['GET'])
 def set_log_filter(attribute, value, operator='=='):
