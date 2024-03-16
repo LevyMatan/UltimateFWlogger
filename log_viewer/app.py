@@ -17,7 +17,7 @@ def index():
     Returns:
         The rendered static_page.html template.
     """
-    return render_template('static_page.html')
+    return render_template('landing_page.html')
 
 @app.route('/logs/filter/<attribute>/<value>', methods=['GET'])
 def set_log_filter(attribute, value, operator='=='):
@@ -71,6 +71,17 @@ def get_unique_values(column):
     """
     unique_values = db_thread.session.query(getattr(Log, column)).distinct().all()
     return jsonify([value[0] for value in unique_values])
+
+@app.route('/latest_logs', methods=['GET'])
+def get_latest_logs():
+    """
+    Retrieve the latest logs from the database.
+
+    Returns:
+        The latest logs in JSON format.
+    """
+    logs = db_thread.get_new_logs()
+    return jsonify(data=[log.to_dict() for log in logs])
 
 if __name__ == '__main__':
     url = "http://localhost:8080/"

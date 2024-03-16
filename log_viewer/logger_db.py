@@ -5,9 +5,10 @@ from sqlalchemy.ext.declarative import declarative_base
 import threading
 import datetime
 import random
+import logging
 
 Base = declarative_base()
-
+logging.basicConfig(level=logging.DEBUG)
 class Log(Base):
     """
     Represents a log entry in the database.
@@ -31,6 +32,16 @@ class Log(Base):
     level = Column(String)
     msg = Column(String)
 
+    def to_dict(self):
+        """
+        Converts the log entry object to a dictionary.
+
+        Returns:
+            dict: A dictionary representation of the log entry object.
+        """
+        log_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
+        log_dict['file_line'] = f"{log_dict['file']}:{log_dict['line']}"
+        return log_dict
 
 class DatabaseThread(threading.Thread):
     def __init__(self, db_name):
@@ -105,24 +116,26 @@ class DatabaseThread(threading.Thread):
             return self.query.all()
 
     def get_new_logs(self):
-            """
-            Retrieves new logs from the database.
+        """
+        Retrieves new logs from the database.
 
-            If self.last_read_id is None, retrieves all logs.
-            Otherwise, retrieves logs with an id greater than self.last_read_id.
+        If self.last_read_id is None, retrieves all logs.
+        Otherwise, retrieves logs with an id greater than self.last_read_id.
 
-            Returns:
-                A list of Log objects representing the new logs.
-            """
-            if self.last_read_id is None:
-                logs = self.session.query(Log).all()
-            else:
-                logs = self.session.query(Log).filter(Log.id > self.last_read_id).all()
+        Returns:
+            A list of Log objects representing the new logs.
+        """
+        if self.last_read_id is None:
+            logs = self.session.query(Log).all()
+            logging.debug(f"Retrieved all logs: {logs}")
+        else:
+            logs = self.session.query(Log).filter(Log.id > self.last_read_id).all()
+            logging.debug(f"Retrieved logs with id greater than {self.last_read_id}: {logs}")
 
-            if logs:
-                self.last_read_id = logs[-1].id
+        if logs:
+            self.last_read_id = logs[-1].id
 
-            return logs
+        return logs
 
     def close(self):
         self.session.close()
