@@ -12,7 +12,20 @@ class MyHandler(FileSystemEventHandler):
         self.db_thread.start()
 
     def on_modified(self, event):
-        with open('shared_log_file.txt', 'r') as f:
+        """
+        Callback method triggered when the shared log file is modified.
+
+        This method reads the newly added lines in the shared log file,
+        parses them into timestamp, level, and message, and inserts them
+        into the database.
+
+        Args:
+            event: The event object representing the file modification.
+
+        Returns:
+            None
+        """
+        with open('shared_log_file.txt', 'r', encoding='utf-8') as f:
             # Move to the last read position
             f.seek(self.last_position)
             lines = f.readlines()
@@ -22,11 +35,11 @@ class MyHandler(FileSystemEventHandler):
                 timestamp = line[0]
                 level = line[1]
                 message = line[2]
-                self.db_thread.insert_log(self.log_id, timestamp, level, message)
+                self.db_thread.insert_log(log_id=self.log_id, timestamp=timestamp, level=level, message=message)
                 self.log_id += 1
 
         # Update the last read position
-        with open('shared_log_file.txt', 'r') as f:
+        with open('shared_log_file.txt', 'r', encoding='utf-8') as f:
             self.last_position = f.tell()
 
     def close(self):
