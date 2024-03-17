@@ -90,6 +90,31 @@ class LogGenerator:
             delay = random.uniform(0, 0.01)
             time.sleep(delay)
 
+    def slow_log_gen(self, num_of_logs=1000, max_delay=1):
+        """
+        Generate logs with a delay between each log.
+
+        This method generates logs with a delay between each log entry. The delay is a random value between 0 and `max_delay` mili-sconds.
+
+        Parameters:
+            num_of_logs (int): The number of logs to generate.
+            max_delay (int): The maximum delay between each log entry.
+
+        Returns:
+            None
+        """
+        for i in range(num_of_logs):
+            date = datetime.datetime.now()
+            level = random.choice(self.levels)
+            file = random.choice(self.files)
+            line = random.randint(1, 1000)
+            src_function_name = f'function_{random.randint(1, 10)}'
+            message = ' '.join(random.sample(['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', 'at', 'midnight', 'in', 'the', 'forest'], random.randint(1, 5)))
+            log = (date, file, line, src_function_name, level, message)
+            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5])
+            delay = random.uniform(0, max_delay) / 1000
+            time.sleep(delay)
+
 
 if __name__ == '__main__':
 

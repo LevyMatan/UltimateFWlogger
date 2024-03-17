@@ -1,4 +1,4 @@
-from flask import Flask, render_template, jsonify
+from flask import Flask, render_template, jsonify, request
 from logger_db import DatabaseThread, Log
 import webbrowser
 import os
@@ -82,6 +82,29 @@ def get_latest_logs():
     """
     logs = db_thread.get_new_logs()
     return jsonify(data=[log.to_dict() for log in logs])
+
+@app.route('/generator', methods=['GET'])
+def generator_page():
+    """
+    Renders the log generator page template.
+
+    Returns:
+        The rendered log generator page template.
+    """
+    return render_template('log_generator.html')
+
+@app.route('/sample_log_gen', methods=['GET'])
+def sample_log_gen():
+    """
+    Generate sample logs and write them to the database.
+
+    Returns:
+        The rendered log generator page template.
+    """
+    num_of_logs = request.args.get('num_of_logs', type=int)
+    max_delay_ms = request.args.get('max_delay_ms', type=int)
+    gen.slow_log_gen(num_of_logs=num_of_logs, max_delay=max_delay_ms)
+
 
 if __name__ == '__main__':
     url = "http://localhost:8080/"
