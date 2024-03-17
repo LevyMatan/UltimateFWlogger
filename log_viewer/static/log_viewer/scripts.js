@@ -43,4 +43,24 @@ $(document).ready(function () {
         var filterValue = $('#msg-filter').val();
         table.column(4).search(filterValue).draw();
     });
+
+    setInterval(function () {
+        fetch('/latest_logs')
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error status:', response.status);
+                return response.text().then(text => {
+                    throw new Error('Error response: ' + text);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            table.rows.add(data.data).draw();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }, 500);
+
 });

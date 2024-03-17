@@ -3,6 +3,8 @@ from logger_db import DatabaseThread, Log
 import webbrowser
 import os
 from sample_logs_generator import LogGenerator
+from threading import Thread
+
 app = Flask(__name__)
 
 db_thread = DatabaseThread('logs.db')
@@ -93,17 +95,23 @@ def generator_page():
     """
     return render_template('log_generator.html')
 
+
 @app.route('/sample_log_gen', methods=['GET'])
 def sample_log_gen():
     """
     Generate sample logs and write them to the database.
 
     Returns:
-        The rendered log generator page template.
+        A JSON response with a message indicating that the request was received.
     """
     num_of_logs = request.args.get('num_of_logs', type=int)
     max_delay_ms = request.args.get('max_delay_ms', type=int)
-    gen.slow_log_gen(num_of_logs=num_of_logs, max_delay=max_delay_ms)
+
+    # Start a new thread that runs the slow_log_gen function
+    thread = Thread(target=gen.slow_log_gen, args=(num_of_logs, max_delay_ms))
+    thread.start()
+
+    return jsonify(message='Request received')
 
 
 if __name__ == '__main__':
