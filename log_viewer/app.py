@@ -8,8 +8,7 @@ from threading import Thread
 app = Flask(__name__)
 
 db_thread = DatabaseThread('logs.db')
-gen = LogGenerator(db_thread, 100)
-gen.write_logs_to_db()
+gen = LogGenerator(db_thread)
 
 @app.route('/', methods=['GET'])
 def index():

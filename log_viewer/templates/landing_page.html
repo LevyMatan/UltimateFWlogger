@@ -8,9 +8,38 @@
     <div>
         <h1 class="title">PHY LOGGER</h1>
         <div class="button-container">
-            <button class="search-button" onclick="goToLogs();">Go to Logs</button>
-            <button class="generator-button" onclick="goToGenerator();">Go to Log Generator</button>
+            <button class="button" onclick="goToLogs();">Go to Logs</button>
+            <button class="button" onclick="goToGenerator();">Go to Log Generator</button>
+            <button class="button" id="configureDeviceButton">Configure Device</button>
+
         </div>
+    </div>
+    <div id="configureDeviceForm" style="display: none;">
+        <form>
+            <div>
+                <label for="device">Device:</label>
+                <select id="device" name="device">
+                    <option value="device1">Device 1</option>
+                    <option value="device2">Device 2</option>
+                    <!-- Add more options as needed -->
+                </select>
+            </div>
+            <div>
+                <label for="logLevel">Log Level:</label>
+                <select id="logLevel" name="logLevel">
+                    <option value="info">Info</option>
+                    <option value="debug">Debug</option>
+                    <option value="warning">Warning</option>
+                    <option value="error">Error</option>
+                </select>
+            </div>
+            <div>
+                <label for="fifoMode">FIFO Mode:</label>
+                <input type="checkbox" id="fifoMode" name="fifoMode">
+            </div>
+
+            <button type="submit">Configure</button>
+        </form>
     </div>
     <script src="{{ url_for('static', filename='landing_page/scripts.js') }}"></script>
 </body>
