@@ -17,6 +17,7 @@ table {
     width: 100%;
     margin: 20px 0;
     border-collapse: collapse;
+    margin-left: 220px;  /* Adjusted to make room for the sidebar */
 }
 
 th,
@@ -70,4 +71,22 @@ th {
 
 td:hover .copy-btn {
     display: block;
+}
+
+#sidebar {
+    position: fixed;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 200px;
+    background-color: #f0f0f0;
+    padding: 20px;
+    overflow: auto;
+}
+
+#logTable {
+    margin-left: 220px;  /* Adjusted to make room for the sidebar */
+}
+#tableContainer {
+    margin-left: 220px;  /* Adjusted to make room for the sidebar */
 }
