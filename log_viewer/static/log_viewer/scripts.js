@@ -10,23 +10,15 @@ $(document).ready(function () {
         "ajax": "/latest_logs",
         "order": [[0, "desc"]],
         "columns": [
-            { "data": "timestamp" },
-            { "data": "file_line" },
-            { "data": "src_function_name" },
-            { "data": "level" },
-            { "data": "msg" }
+            { "data": "timestamp"},
+            { "data": "file_line"},
+            { "data": "src_function_name"},
+            { "data": "level"},
+            { "data": "msg"}
         ],
         "columnDefs": [
             { "orderable": false, "targets": [1, 2, 3, 4] }
         ],
-        // "searchPanes": true,
-        // "dom": 'Pfrtip',  // Show the SearchPane
-    });
-
-    // Add event listeners for the checkboxes in the sidebar
-    $('#sidebar input[type="checkbox"]').change(function() {
-        // Update the log fetcher service based on the new checkbox state
-        // This will depend on how your log fetcher service is implemented
     });
 
     // Initialize the autocomplete widgets
@@ -70,18 +62,4 @@ $(document).ready(function () {
             console.error('Error:', error);
         });
     }, 500);
-
-    $( function() {
-        $( "#sidebar" ).resizable({
-            handles: 'e',
-            minWidth: 200,
-            maxWidth: 500
-        });
-    } );
-
-    $( function() {
-        $( "#sidebar" ).on( "resizestop", function( event, ui ) {
-            $( "#tableContainer" ).css('margin-left', ui.size.width + 20);
-        } );
-    } );
 });

@@ -1,23 +1,25 @@
+/* Global Styles */
 body {
+    background-color: #f0f0f0;
     font-family: Arial, sans-serif;
     margin: 0;
     padding: 0;
-    background-color: #f0f0f0;
 }
 
+/* Header Styles */
 h1 {
     background-color: #000000;
     color: #fff;
-    padding: 10px 0;
     margin: 0;
+    padding: 10px 0;
     text-align: center;
 }
 
+/* Table Styles */
 table {
-    width: 100%;
-    margin: 20px 0;
     border-collapse: collapse;
-    margin-left: 220px;  /* Adjusted to make room for the sidebar */
+    margin: 20px 0;
+    width: 100%;
 }
 
 th,
@@ -25,6 +27,11 @@ td {
     border: 1px solid #ddd;
     padding: 8px;
     text-align: left;
+}
+
+th {
+    background-color: #76b900;
+    color: white;
 }
 
 .odd-row {
@@ -35,20 +42,12 @@ td {
     background-color: #f2f2f2 !important;
 }
 
-th {
-    background-color: #76b900;
-    color: white;
-}
-
 .table-scrollable {
-    overflow-y: auto;
     display: block;
+    overflow-y: auto;
 }
 
-.highlight {
-    background-color: #ff0;
-}
-
+/* Column Styles */
 .timestamp,
 .level,
 .source,
@@ -60,33 +59,70 @@ th {
     width: 100%;
 }
 
+/* Button Styles */
 .copy-btn {
-    display: none;
-    position: absolute;
     background: #76b900;
     color: #fff;
-    padding: 5px;
     cursor: pointer;
+    display: none;
+    padding: 5px;
+    position: absolute;
 }
 
 td:hover .copy-btn {
     display: block;
 }
 
+/* Sidebar Styles */
 #sidebar {
-    position: fixed;
-    left: 0;
-    top: 0;
-    bottom: 0;
-    width: 200px;
     background-color: #f0f0f0;
-    padding: 20px;
+    bottom: 0;
+    left: 0;
     overflow: auto;
+    padding: 20px;
+    position: relative;
+    top: 0;
+    width: 200px;
 }
 
-#logTable {
-    margin-left: 220px;  /* Adjusted to make room for the sidebar */
+/* Checkbox Styles */
+#sidebar input[type="checkbox"] {
+    display: none;
 }
-#tableContainer {
-    margin-left: 220px;  /* Adjusted to make room for the sidebar */
+
+#sidebar input[type="checkbox"] + label {
+    cursor: pointer;
+    padding-left: 25px;
+    position: relative;
+}
+
+#sidebar input[type="checkbox"] + label:before {
+    border: 2px solid #76b900;  /* Nvidia green */
+    border-radius: 3px;
+    content: "";
+    height: 18px;
+    left: 0;
+    position: absolute;
+    top: 0;
+    width: 18px;
+}
+
+#sidebar input[type="checkbox"]:checked + label:after {
+    border: solid #76b900;  /* Nvidia green */
+    border-width: 0 3px 3px 0;
+    content: "";
+    height: 12px;
+    left: 6px;
+    position: absolute;
+    top: 2px;
+    transform: rotate(45deg);
+    width: 6px;
+}
+.button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 16px;
+    background-color: #76b900;
+    color: #000;
+    border: none;
 }
