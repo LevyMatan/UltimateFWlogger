@@ -8,7 +8,7 @@ import random
 import logging
 
 Base = declarative_base()
-logging.basicConfig(level=logging.DEBUG)
+# logging.basicConfig(level=logging.DEBUG)
 class Log(Base):
     """
     Represents a log entry in the database.

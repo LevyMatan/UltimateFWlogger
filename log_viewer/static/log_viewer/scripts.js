@@ -10,11 +10,11 @@ $(document).ready(function () {
         "ajax": "/latest_logs",
         "order": [[0, "desc"]],
         "columns": [
-            { "data": "timestamp" },
-            { "data": "file_line" },
-            { "data": "src_function_name" },
-            { "data": "level" },
-            { "data": "msg" }
+            { "data": "timestamp"},
+            { "data": "file_line"},
+            { "data": "src_function_name"},
+            { "data": "level"},
+            { "data": "msg"}
         ],
         "columnDefs": [
             { "orderable": false, "targets": [1, 2, 3, 4] }
@@ -43,4 +43,23 @@ $(document).ready(function () {
         var filterValue = $('#msg-filter').val();
         table.column(4).search(filterValue).draw();
     });
+
+    setInterval(function () {
+        fetch('/latest_logs')
+        .then(response => {
+            if (!response.ok) {
+                console.error('Error status:', response.status);
+                return response.text().then(text => {
+                    throw new Error('Error response: ' + text);
+                });
+            }
+            return response.json();
+        })
+        .then(data => {
+            table.rows.add(data.data).draw();
+        })
+        .catch(error => {
+            console.error('Error:', error);
+        });
+    }, 500);
 });

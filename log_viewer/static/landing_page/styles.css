@@ -19,11 +19,42 @@ body {
     font-size: 3em;
     font-weight: bold;
 }
-.search-button {
+
+.button {
     margin-top: 20px;
     padding: 10px 20px;
     font-size: 16px;
     background-color: #76b900;
     color: #000;
     border: none;
+}
+
+.button-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* Add this line */
+}
+.button-container button {
+    margin-bottom: 10px;  /* Adjust as needed */
+    width: 60%;
+}
+
+#configureDeviceForm {
+    position: fixed;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    background-color: #f0f0f0;  /* Adjusted to a darker shade of gray */
+    padding: 20px;
+    border: 1px solid black;
+    border-radius: 10px;
+    width: 400px;  /* Increased from 300px to 400px */
+    box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+    font-size: 18px;  /* Added to increase the font size */
+}
+
+#configureDeviceForm div {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 10px;
 }
