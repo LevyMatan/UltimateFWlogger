@@ -1,0 +1,37 @@
+from enum import Enum
+
+class FW_LOG_MODULE_TYPE(Enum):
+    LOG_MOD_INFRA = 1 << 0
+    LOG_MOD_INIT = 1 << 1
+    LOG_MOD_SHARP = 1 << 2
+    LOG_MOD_COUNTERS = 1 << 3
+    LOG_MOD_FDB = 1 << 4
+    LOG_MOD_SMA = 1 << 5
+    LOG_MOD_PHY_IB = 1 << 6
+    LOG_MOD_PHY_ADAP = 1 << 7
+    LOG_MOD_PHY_ETH = 1 << 8
+    LOG_MOD_PHY_GENERAL = 1 << 9
+    LOG_MOD_PHY_MANAGER = 1 << 10
+    LOG_MOD_PWR = 1 << 11
+    LOG_MOD_MAD = 1 << 12
+    LOG_MOD_SMP_HANDLER = 1 << 13
+    LOG_MOD_EMAD = 1 << 14
+    LOG_MOD_TRAPS = 1 << 15
+    LOG_MOD_PKTS = 1 << 16
+    LOG_MOD_HOST_IF = 1 << 17
+    LOG_MOD_BUFFER = 1 << 18
+    LOG_MOD_PORTS_CMD = 1 << 19
+    LOG_MOD_MISC_COMMAND = 1 << 20
+    LOG_MOD_SWITCH_L2 = 1 << 21
+    LOG_MOD_QOS = 1 << 22
+    LOG_MOD_PROFILE = 1 << 23
+    LOG_MOD_FLASH = 1 << 24
+    LOG_MOD_MONITORING = 1 << 25
+    LOG_MOD_IFARM = 1 << 26
+    LOG_MOD_MODULE_MNG = 1 << 27
+    LOG_MOD_SYSTEM_MNG = 1 << 28
+    LOG_MOD_POLICY_ENGINE = 1 << 29
+    LOG_MOD_ROUTER = 1 << 30
+    LOG_MOD_DEBUG_TRACER = 1 << 31
+
+    
