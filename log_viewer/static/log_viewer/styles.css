@@ -126,3 +126,20 @@ td:hover .copy-btn {
     color: #000;
     border: none;
 }
+
+#toggleAll {
+    display: none;
+}
+
+.toggle-label {
+    padding: 10px;
+    background-color: #ddd;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 0.8em;
+    color: #666;
+}
+
+#toggleAll:checked + .toggle-label {
+    background-color: #bbb;
+}

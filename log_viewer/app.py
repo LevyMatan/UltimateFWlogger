@@ -4,6 +4,7 @@ import webbrowser
 import os
 from sample_logs_generator import LogGenerator
 from threading import Thread
+from dev_interactions import FW_LOG_MODULE_TYPE
 
 app = Flask(__name__)
 
@@ -57,7 +58,7 @@ def get_logs():
               '#FFB6C1',
               # light orange
               '#FFD700']
-    return render_template('log_viewer.html', logs=logs, colors=colors)
+    return render_template('log_viewer.html', logs=logs, colors=colors, log_groups=FW_LOG_MODULE_TYPE)
 
 @app.route('/unique/<column>')
 def get_unique_values(column):

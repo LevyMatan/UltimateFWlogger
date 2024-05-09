@@ -40,10 +40,17 @@
                 <hr>  <!-- Separator line -->
 
                 <h2>Log Groups</h2>
+                <div>
+                    <input type="checkbox" id="toggleAll" name="toggleAll" value="toggleAll">
+                    <label for="toggleAll" class="toggle-label">Toggle All</label>
+                </div>
                 <!-- Add a checkbox for each log group -->
-                <input type="checkbox" id="logGroup1" name="logGroup1" checked>
-                <label for="logGroup1">Log Group 1</label>
-                <!-- Repeat for each log group -->
+                {% for log_group in log_groups %}
+                    <div>
+                        <input type="checkbox" id="{{ log_group.name }}" name="{{ log_group.name }}" value="{{ log_group.value }}" checked>
+                        <label for="{{ log_group.name }}">{{ log_group.name }}</label>
+                    </div>
+                {% endfor %}
 
                 <hr>  <!-- Separator line -->
 
