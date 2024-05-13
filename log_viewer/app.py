@@ -114,6 +114,20 @@ def sample_log_gen():
     return jsonify(message='Request received')
 
 
+@app.route('/upload_logs', methods=['POST'])
+def upload_logs():
+    data = request.get_json()
+    file_path = data['filePath']
+
+    if not os.path.exists(file_path):
+        print(f'File does not exist at {file_path}')
+        return jsonify({'error': 'File does not exist'}), 400
+
+    # Process the file at file_path
+    # ...
+
+    return (jsonify({'message': 'File processed successfully'}), 200)
+
 if __name__ == '__main__':
     url = "http://localhost:8080/"
     webbrowser.open(url, new=2)  # open in new tab, if possible

@@ -1,5 +1,5 @@
 $(document).ready(function () {
-    var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'msg']
+    var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'log_group', 'msg']
 
     var table = $('#logTable').DataTable({
         "pageLength": 1000,
@@ -14,6 +14,7 @@ $(document).ready(function () {
             { "data": "file_line"},
             { "data": "src_function_name"},
             { "data": "level"},
+            { "data": "log_group"},
             { "data": "msg"}
         ],
         "columnDefs": [

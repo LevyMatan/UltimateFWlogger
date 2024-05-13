@@ -1,4 +1,4 @@
-from sqlalchemy import create_engine, Column, String, Integer, Sequence
+from sqlalchemy import create_engine, Column, String, Integer, Sequence, Enum
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import inspect
 from sqlalchemy.ext.declarative import declarative_base
@@ -6,6 +6,8 @@ import threading
 import datetime
 import random
 import logging
+from dev_interactions import FW_LOG_MODULE_TYPE  # Import the enum
+
 
 Base = declarative_base()
 # logging.basicConfig(level=logging.DEBUG)
@@ -30,6 +32,7 @@ class Log(Base):
     line = Column(Integer)
     src_function_name = Column(String)
     level = Column(String)
+    log_group = Column(Enum(FW_LOG_MODULE_TYPE))
     msg = Column(String)
 
     def to_dict(self):
@@ -41,6 +44,7 @@ class Log(Base):
         """
         log_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
         log_dict['file_line'] = f"{log_dict['file']}:{log_dict['line']}"
+        log_dict['log_group'] = log_dict['log_group'].name
         return log_dict
 
 class DatabaseThread(threading.Thread):
@@ -62,7 +66,7 @@ class DatabaseThread(threading.Thread):
         self.last_read_id = 0
         self.query = self.session.query(Log)
 
-    def insert_log(self, timestamp, file, line, src_function_name, level, msg):
+    def insert_log(self, timestamp, file, line, src_function_name, level, log_group, msg):
         """
         Inserts a new log entry into the database.
 
@@ -74,7 +78,7 @@ class DatabaseThread(threading.Thread):
         Returns:
             None
         """
-        new_log = Log(id=self.log_id, timestamp=timestamp, file=file, line=line, src_function_name=src_function_name, level=level, msg=msg)
+        new_log = Log(id=self.log_id, timestamp=timestamp, file=file, line=line, src_function_name=src_function_name, level=level, log_group=log_group, msg=msg)
         self.session.add(new_log)
         self.session.commit()
         self.log_id += 1

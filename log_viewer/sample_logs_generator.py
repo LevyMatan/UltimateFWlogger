@@ -10,7 +10,7 @@ import time
 import random
 import datetime
 import argparse
-
+from dev_interactions import FW_LOG_MODULE_TYPE
 from logger_db import DatabaseThread
 
 class LogGenerator:
@@ -50,7 +50,9 @@ class LogGenerator:
             src_function_name = f'function_{random.randint(1, 10)}'
             # get a random message from the internet, should be up to 15 words
             message = ' '.join(random.sample(['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', 'at', 'midnight', 'in', 'the', 'forest'], random.randint(1, 5)))
-            logs[i] = (date, file, line, src_function_name, level, message)
+            log_group = random.choice(list(FW_LOG_MODULE_TYPE))  # Choose a random log group
+            print(log_group)
+            logs[i] = (date, file, line, src_function_name, level, log_group, message)  # Add the log group to the log tuple
         return logs
 
     def write_logs_to_db(self):
@@ -65,7 +67,7 @@ class LogGenerator:
         """
         self.db_thread.start()
         for log in self.generate_logs():
-            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5])
+            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5], log[6])
             delay = random.uniform(0, 0.01)
             time.sleep(delay)
         self.db_thread.close()
@@ -110,8 +112,9 @@ class LogGenerator:
             line = random.randint(1, 1000)
             src_function_name = f'function_{random.randint(1, 10)}'
             message = ' '.join(random.sample(['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', 'at', 'midnight', 'in', 'the', 'forest'], random.randint(1, 5)))
-            log = (date, file, line, src_function_name, level, message)
-            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5])
+            log_group = random.choice(list(FW_LOG_MODULE_TYPE)).name # Choose a random log group
+            log = (date, file, line, src_function_name, level, log_group, message)
+            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5], log[6])
             delay = random.uniform(0, max_delay) / 1000
             time.sleep(delay)
 

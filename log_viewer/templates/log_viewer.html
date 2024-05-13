@@ -70,6 +70,7 @@
                         <th data-name="file"class="source">Source</th>
                         <th data-name="src_function_name"class="function">Function</th>
                         <th data-name="level"class="level">Level</th>
+                        <th data-name="log_group"class="log-group">Group</th>
                         <th data-name="msg"class="message">Message</th>
                     </tr>
                     <tr>
@@ -77,6 +78,7 @@
                         <th><input data-name="file" type="text" id="file-filter" class="column-filter" data-column="1"></th>
                         <th><input data-name="src_function_name" type="text" id="src_function_name-filter" class="column-filter" data-column="2"></th>
                         <th><input data-name="level" type="text" id="level-filter" class="column-filter" data-column="3"></th>
+                        <th><input data-name="log_group" type="text" id="log_group-filter" class="column-filter" data-column="4"></th>
                         <th><input type="text" id="msg-filter" placeholder="Filter by message">
                             <button id="apply-filter">Apply Filter</button> <!-- Added filter button -->
                         </th> <!-- Filter for msg column -->
@@ -89,6 +91,7 @@
                         <td>{{ log.file }}:{{ log.line }}</td>
                         <td>{{ log.src_function_name }}</td>
                         <td>{{ log.level }}</td>
+                        <td>{{ log.log_group.name }}</td>
                         <td>{{ log.msg }}</td>
                     </tr>
                     {% endfor %}
