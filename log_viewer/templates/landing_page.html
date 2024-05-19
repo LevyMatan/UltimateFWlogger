@@ -8,9 +8,9 @@
     <div>
         <h1 class="title">PHY LOGGER</h1>
         <div class="button-container">
-            <button class="button" onclick="goToLogs();">Go to Logs</button>
-            <button class="button" onclick="goToGenerator();">Go to Log Generator</button>
-            <button class="button" id="configureDeviceButton">Configure Device</button>
+            <a class="button" href="{{url_for('get_logs')}}">Go to Logs</a>
+            <a class="button" href="{{url_for('generator_page')}}">Go to Log Generator</a>
+            <a class="button" id="configureDeviceButton">Configure Device</a>
 
         </div>
     </div>

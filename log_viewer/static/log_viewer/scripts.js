@@ -17,15 +17,34 @@ $(document).ready(function () {
             { "data": "log_group"},
             { "data": "msg"}
         ],
-        "columnDefs": [
-            { "orderable": false, "targets": [1, 2, 3, 4] }
+        columnDefs: [
+            { 
+            orderable: false, 
+            targets: 5,
+            className: 'search-hilite'}
         ],
+        dom: 'Plfrtip',  // P is for searchPanes
+        searchPanes: {
+            cascadePanes: true,  // Initialize in a collapsed state
+            layout: 'columns-3',  // Layout the panes in three columns
+            viewTotal: true,  // Show the total number of records in the dataset
+            initCollapsed: true  // Initialize in a collapsed state
+
+        }
     });
 
+    table.on( 'draw', function () {
+        var body = $( '.search-hilite', table.table().body() );
+
+        body.unhighlight();
+        // Debug: show search box value
+        body.highlight( table.search() );  
+    } );
     // Initialize the autocomplete widgets
     $('.column-filter').each(function () {
         var column = table.column($(this).data('column'));
         var columnName = $(this).attr('data-name');
+        // $(this).after('<button id="' + columnName + '-clear" class="clear-filter">x</button>');
 
         $.getJSON('/unique/' + columnName, function(data) {
             $('#' + columnName + '-filter').autocomplete({
@@ -37,12 +56,20 @@ $(document).ready(function () {
                 }
             });
         });
+        // Initially hide the clear button
+        $('#' + columnName + '-clear').hide();
     });
 
     // Add click event handler for the filter button
     $('#apply-filter').click(function () {
         var filterValue = $('#msg-filter').val();
         table.column(4).search(filterValue).draw();
+    });
+
+    $('.clear-filter').click(function () {
+        var columnName = $(this).attr('id').replace('-clear', '');
+        var column = table.column($('[data-name="' + columnName + '"]').data('column'));
+        column.search('').draw();
     });
 
     setInterval(function () {
@@ -137,4 +164,7 @@ $(document).ready(function () {
         logGroupValue = toggleAll.checked ? 0xFFFFFFFF : 0;
 
     });
+
+    
+
 });

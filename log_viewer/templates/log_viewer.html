@@ -8,16 +8,21 @@
     <!-- Stylesheets -->
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css">
     <link rel="stylesheet" href="https://code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
-    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css">
+    <!-- <link rel="stylesheet" href="https://cdn.datatables.net/1.10.25/css/jquery.dataTables.css" type="text/css"> -->
+    <link rel="stylesheet" href="https://cdn.datatables.net/plug-ins/1.13.7/features/searchHighlight/dataTables.searchHighlight.css"  type="text/css" />
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/searchpanes/1.4.0/css/searchPanes.dataTables.min.css"/>
     <link rel="stylesheet" href="{{ url_for('static', filename='log_viewer/styles.css') }}">
-
+    <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.11.3/css/jquery.dataTables.min.css"/>
+    
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
-    <script src="https://cdn.datatables.net/1.10.25/js/jquery.dataTables.js"></script>
-    <script src="https://cdn.datatables.net/searchpanes/1.2.2/js/dataTables.searchPanes.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/1.11.3/js/jquery.dataTables.min.js"></script>
+    <script type="text/javascript" src="https://cdn.datatables.net/searchpanes/1.4.0/js/dataTables.searchPanes.min.js"></script>
     <script src="https://cdn.datatables.net/select/1.3.3/js/dataTables.select.min.js"></script>
     <script src="https://cdn.rawgit.com/alvaro-prieto/colResizable/master/colResizable-1.6.min.js"></script>
+    <script src="https://bartaz.github.io/sandbox.js/jquery.highlight.js"></script>
+    <script src="https://cdn.datatables.net/plug-ins/1.13.7/features/searchHighlight/dataTables.searchHighlight.min.js"></script>
     <title>Log Viewer</title>
 </head>
 
@@ -63,7 +68,7 @@
 
     <div class="col-10">
         <div class="table-scrollable">
-            <table id="logTable" class="display" style="width:100%">
+            <table id="logTable" class="display nowrap" style="width:100%">
                 <thead>
                     <tr>
                         <th data-name="timestamp"class="timestamp">Timestamp</th>
@@ -73,16 +78,20 @@
                         <th data-name="log_group"class="log-group">Group</th>
                         <th data-name="msg"class="message">Message</th>
                     </tr>
-                    <tr>
+                    <!-- <tr>
                         <th></th>
+                        <th><div class="input-group mb-3">
+                            <input data-name="file" type="text" id="file-filter" class="form-control column-filter" data-column="1" aria-describedby="button-addon2">
+                            <button class="btn btn-outline-secondary" type="button" id="button-addon2">x</button>
+                        </div></th>
                         <th><input data-name="file" type="text" id="file-filter" class="column-filter" data-column="1"></th>
                         <th><input data-name="src_function_name" type="text" id="src_function_name-filter" class="column-filter" data-column="2"></th>
                         <th><input data-name="level" type="text" id="level-filter" class="column-filter" data-column="3"></th>
                         <th><input data-name="log_group" type="text" id="log_group-filter" class="column-filter" data-column="4"></th>
                         <th><input type="text" id="msg-filter" placeholder="Filter by message">
-                            <button id="apply-filter">Apply Filter</button> <!-- Added filter button -->
-                        </th> <!-- Filter for msg column -->
-                    </tr>
+                            <button id="apply-filter">Apply Filter</button>
+                        </th> 
+                    </tr> -->
                 </thead>
                 <tbody>
                     {% for log in logs %}
