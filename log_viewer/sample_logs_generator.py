@@ -12,7 +12,7 @@ import datetime
 import argparse
 from dev_interactions import FW_LOG_MODULE_TYPE
 from logger_db import DatabaseThread
-
+from log_def import Log
 class LogGenerator:
     """
     LogGenerator class is responsible for generating and writing logs.
@@ -113,8 +113,8 @@ class LogGenerator:
             src_function_name = f'function_{random.randint(1, 10)}'
             message = ' '.join(random.sample(['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', 'at', 'midnight', 'in', 'the', 'forest'], random.randint(1, 5)))
             log_group = random.choice(list(FW_LOG_MODULE_TYPE)).name # Choose a random log group
-            log = (date, file, line, src_function_name, level, log_group, message)
-            self.db_thread.insert_log(log[0], log[1], log[2], log[3], log[4], log[5], log[6])
+            log = Log(date, file, line, src_function_name, level, log_group, message)
+            self.db_thread.insert_log(log)
             delay = random.uniform(0, max_delay) / 1000
             time.sleep(delay)
 

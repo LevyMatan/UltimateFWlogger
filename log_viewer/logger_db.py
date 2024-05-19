@@ -7,45 +7,8 @@ import datetime
 import random
 import logging
 from dev_interactions import FW_LOG_MODULE_TYPE  # Import the enum
+from log_def import Log, Base  # Import the Log class
 
-
-Base = declarative_base()
-# logging.basicConfig(level=logging.DEBUG)
-class Log(Base):
-    """
-    Represents a log entry in the database.
-
-    Attributes:
-        id (int): The unique identifier of the log entry.
-        timestamp (str): The timestamp of when the log entry was created.
-        file (str): The file name associated with the log entry.
-        line (int): The line number in the file where the log entry occurred.
-        src_function_name (str): The name of the function where the log entry occurred.
-        level (str): The log level of the entry (e.g., INFO, WARNING, ERROR).
-        msg (str): The log message.
-    """
-    __tablename__ = 'logs'
-
-    id = Column(Integer, Sequence('log_id_seq'), primary_key=True)
-    timestamp = Column(Integer)
-    file = Column(String)
-    line = Column(Integer)
-    src_function_name = Column(String)
-    level = Column(String)
-    log_group = Column(Enum(FW_LOG_MODULE_TYPE))
-    msg = Column(String)
-
-    def to_dict(self):
-        """
-        Converts the log entry object to a dictionary.
-
-        Returns:
-            dict: A dictionary representation of the log entry object.
-        """
-        log_dict = {c.name: getattr(self, c.name) for c in self.__table__.columns}
-        log_dict['file_line'] = f"{log_dict['file']}:{log_dict['line']}"
-        log_dict['log_group'] = log_dict['log_group'].name
-        return log_dict
 
 class DatabaseThread(threading.Thread):
     def __init__(self, db_name):
@@ -66,22 +29,10 @@ class DatabaseThread(threading.Thread):
         self.last_read_id = 0
         self.query = self.session.query(Log)
 
-    def insert_log(self, timestamp, file, line, src_function_name, level, log_group, msg):
-        """
-        Inserts a new log entry into the database.
+    def insert_log(self, log):
 
-        Args:
-            date (datetime): The date and time of the log entry.
-            level (str): The log level (e.g., INFO, WARNING, ERROR).
-            msg (str): The log message.
-
-        Returns:
-            None
-        """
-        new_log = Log(id=self.log_id, timestamp=timestamp, file=file, line=line, src_function_name=src_function_name, level=level, log_group=log_group, msg=msg)
-        self.session.add(new_log)
+        self.session.add(log)
         self.session.commit()
-        self.log_id += 1
 
         # Check if total logs is greater than 20000
         total_logs = self.session.query(Log).count()
@@ -143,20 +94,3 @@ class DatabaseThread(threading.Thread):
 
     def close(self):
         self.session.close()
-
-
-if __name__ == '__main__':
-    db_thread = DatabaseThread('logs.db')
-    db_thread.start()
-    db_thread.join()
-    db_thread.insert_log(
-        timestamp=datetime.datetime.now(),
-        file='fileA.c',
-        line=random.randint(1,1000),
-        level='INFO',
-        msg='This is a test log message'
-    )
-    logs = db_thread.get_new_logs()
-    for log in logs:
-        print(log.id, log.timestamp, log.level, log.msg)
-    db_thread.close()
