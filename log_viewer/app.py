@@ -1,12 +1,16 @@
-from flask import Flask, render_template, jsonify, request
+from flask import Flask, render_template, jsonify, request, url_for, redirect
 from logger_db import DatabaseThread, Log
 import webbrowser
 import os
 from sample_logs_generator import LogGenerator
 from threading import Thread
 from dev_interactions import FW_LOG_MODULE_TYPE
+from flaskwebgui import FlaskUI
+from forms import LogGenForm
 
 app = Flask(__name__)
+app.config['SECRET_KEY'] = 'your-secret-key'
+ui = FlaskUI(app, port=8080)
 
 db_thread = DatabaseThread('logs.db')
 gen = LogGenerator(db_thread)
@@ -38,7 +42,7 @@ def set_log_filter(attribute, value, operator='=='):
     print(f'Filter set: {attribute} {operator} {value}')
     return get_logs()
 
-@app.route('/logs', methods=['GET'])
+@app.route('/get_logs', methods=['GET'])
 def get_logs():
     """
     Retrieve all logs from the database and render them in the log_viewer.html template.
@@ -47,18 +51,7 @@ def get_logs():
         The rendered template with the logs.
     """
     logs = db_thread.get_all_logs()
-    # set an array of 5 colors for highlighting:
-    colors = [# light blue
-              '#ADD8E6',
-              # light green
-              '#90EE90',
-              # light yellow
-              '#FFFFE0',
-              # light pink
-              '#FFB6C1',
-              # light orange
-              '#FFD700']
-    return render_template('log_viewer.html', logs=logs, colors=colors, log_groups=FW_LOG_MODULE_TYPE)
+    return render_template('log_viewer.html', logs=logs, log_groups=FW_LOG_MODULE_TYPE)
 
 @app.route('/unique/<column>')
 def get_unique_values(column):
@@ -85,7 +78,7 @@ def get_latest_logs():
     logs = db_thread.get_new_logs()
     return jsonify(data=[log.to_dict() for log in logs])
 
-@app.route('/generator', methods=['GET'])
+@app.route('/generator_page', methods=['GET', 'POST'])
 def generator_page():
     """
     Renders the log generator page template.
@@ -93,26 +86,17 @@ def generator_page():
     Returns:
         The rendered log generator page template.
     """
-    return render_template('log_generator.html')
-
-
-@app.route('/sample_log_gen', methods=['GET'])
-def sample_log_gen():
-    """
-    Generate sample logs and write them to the database.
-
-    Returns:
-        A JSON response with a message indicating that the request was received.
-    """
-    num_of_logs = request.args.get('num_of_logs', type=int)
-    max_delay_ms = request.args.get('max_delay_ms', type=int)
-
-    # Start a new thread that runs the slow_log_gen function
-    thread = Thread(target=gen.slow_log_gen, args=(num_of_logs, max_delay_ms))
-    thread.start()
-
-    return jsonify(message='Request received')
-
+    log_generator_form = LogGenForm()
+    if request.method == 'POST':
+        if log_generator_form.validate_on_submit():
+            num_of_logs = log_generator_form.num_of_logs.data
+            delay_betweeen_logs = log_generator_form.delay_betweeen_logs.data
+            # Start a new thread that runs the slow_log_gen function
+            thread = Thread(target=gen.slow_log_gen, args=(num_of_logs, delay_betweeen_logs))
+            thread.start()
+            return redirect(url_for('index'))
+        
+    return render_template('log_generator.html', log_generator_form=log_generator_form)
 
 @app.route('/upload_logs', methods=['POST'])
 def upload_logs():
@@ -128,10 +112,35 @@ def upload_logs():
 
     return (jsonify({'message': 'File processed successfully'}), 200)
 
+@app.route('/clear_logs', methods=['GET'])
+def clear_logs():
+    """
+    Clear all logs from the database.
+
+    Returns:
+        A JSON response with a message indicating that the logs were cleared.
+    """
+    db_thread.clear_logs()
+    return jsonify(message='Logs cleared')
+
+@app.route('/log_group', methods=['POST'])
+def log_group():
+    """
+    Set the log group for the logs.
+
+    Returns:
+        A JSON response with a message indicating that the log group was set.
+    """
+    data = request.get_json()
+    log_group = data['log_group']
+    db_thread.set_logs_filter('log_group', log_group)
+    return jsonify(message='Log group set')
+
 if __name__ == '__main__':
     url = "http://localhost:8080/"
     webbrowser.open(url, new=2)  # open in new tab, if possible
     app.run(debug=True, port=8080)
+    # ui.run()
     db_thread.close()
     # Delete the DB file
     os.remove('logs.db')
