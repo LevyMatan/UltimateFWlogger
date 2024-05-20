@@ -2,26 +2,27 @@ $(document).ready(function () {
     var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'log_group', 'msg']
 
     var table = $('#logTable').DataTable({
-        "pageLength": 1000,
-        "autoWidth": false,
-        "scrollY": "97%",
-        "scrollCollapse": false,
-        "stripeClasses": ['odd-row', 'even-row'],
-        "ajax": "/latest_logs",
-        "order": [[0, "desc"]],
-        "columns": [
-            { "data": "timestamp"},
-            { "data": "file_line"},
-            { "data": "src_function_name"},
-            { "data": "level"},
-            { "data": "log_group"},
-            { "data": "msg"}
+        pageLength: 1000,
+        autoWidth: false,
+        scrollY: "97%",
+        scrollCollapse: false,
+        stripeClasses: ['odd-row', 'even-row'],
+        ajax: "/latest_logs",
+        order: [[0, "desc"]],
+        columns: [
+            { data: "timestamp" },
+            { data: "file_line" },
+            { data: "src_function_name" },
+            { data: "level" },
+            { data: "log_group" },
+            { data: "msg" }
         ],
         columnDefs: [
-            { 
-            orderable: false, 
-            targets: 5,
-            className: 'search-hilite'}
+            {
+                orderable: false,
+                targets: 5,
+                className: 'search-hilite'
+            }
         ],
         dom: 'Plfrtip',  // P is for searchPanes
         searchPanes: {
@@ -29,8 +30,7 @@ $(document).ready(function () {
             layout: 'columns-3',  // Layout the panes in three columns
             viewTotal: true,  // Show the total number of records in the dataset
             initCollapsed: true  // Initialize in a collapsed state
-
-        }
+        },
     });
 
     table.on( 'draw', function () {
@@ -40,37 +40,6 @@ $(document).ready(function () {
         // Debug: show search box value
         body.highlight( table.search() );  
     } );
-    // Initialize the autocomplete widgets
-    $('.column-filter').each(function () {
-        var column = table.column($(this).data('column'));
-        var columnName = $(this).attr('data-name');
-        // $(this).after('<button id="' + columnName + '-clear" class="clear-filter">x</button>');
-
-        $.getJSON('/unique/' + columnName, function(data) {
-            $('#' + columnName + '-filter').autocomplete({
-                source: data,
-                select: function (event, ui) {
-                    var result_set = column.search(ui.item.value);
-                    column.search(ui.item.value).draw();
-                    $.get('/logs/filters/' + columnName + '/' + ui.item.value);
-                }
-            });
-        });
-        // Initially hide the clear button
-        $('#' + columnName + '-clear').hide();
-    });
-
-    // Add click event handler for the filter button
-    $('#apply-filter').click(function () {
-        var filterValue = $('#msg-filter').val();
-        table.column(4).search(filterValue).draw();
-    });
-
-    $('.clear-filter').click(function () {
-        var columnName = $(this).attr('id').replace('-clear', '');
-        var column = table.column($('[data-name="' + columnName + '"]').data('column'));
-        column.search('').draw();
-    });
 
     setInterval(function () {
         fetch('/latest_logs')
