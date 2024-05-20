@@ -25,23 +25,6 @@ def index():
     """
     return render_template('landing_page.html')
 
-@app.route('/logs/filter/<attribute>/<value>', methods=['GET'])
-def set_log_filter(attribute, value, operator='=='):
-    """
-    Set the filter for the logs.
-
-    Args:
-        attribute (str): The attribute to filter on: 'level', 'file', 'src_function_name'.
-        value (str): The value to filter on.
-        operator (str): The operator to use for the filter (e.g., '==', '!=').
-
-    Returns:
-        None
-    """
-    db_thread.set_logs_filter(attribute, value, operator)
-    print(f'Filter set: {attribute} {operator} {value}')
-    return get_logs()
-
 @app.route('/get_logs', methods=['GET'])
 def get_logs():
     """
@@ -52,20 +35,6 @@ def get_logs():
     """
     logs = db_thread.get_all_logs()
     return render_template('log_viewer.html', logs=logs, log_groups=FW_LOG_MODULE_TYPE)
-
-@app.route('/unique/<column>')
-def get_unique_values(column):
-    """
-    Retrieve unique values from a specific column in the database.
-
-    Args:
-        column (str): The name of the column to retrieve unique values from.
-
-    Returns:
-        list: A list of unique values from the specified column.
-    """
-    unique_values = db_thread.session.query(getattr(Log, column)).distinct().all()
-    return jsonify([value[0] for value in unique_values])
 
 @app.route('/latest_logs', methods=['GET'])
 def get_latest_logs():
@@ -122,19 +91,6 @@ def clear_logs():
     """
     db_thread.clear_logs()
     return jsonify(message='Logs cleared')
-
-@app.route('/log_group', methods=['POST'])
-def log_group():
-    """
-    Set the log group for the logs.
-
-    Returns:
-        A JSON response with a message indicating that the log group was set.
-    """
-    data = request.get_json()
-    log_group = data['log_group']
-    db_thread.set_logs_filter('log_group', log_group)
-    return jsonify(message='Log group set')
 
 if __name__ == '__main__':
     url = "http://localhost:8080/"
