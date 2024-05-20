@@ -51,7 +51,6 @@ class LogGenerator:
             # get a random message from the internet, should be up to 15 words
             message = ' '.join(random.sample(['The', 'quick', 'brown', 'fox', 'jumps', 'over', 'the', 'lazy', 'dog', 'at', 'midnight', 'in', 'the', 'forest'], random.randint(1, 5)))
             log_group = random.choice(list(FW_LOG_MODULE_TYPE))  # Choose a random log group
-            print(log_group)
             logs[i] = (date, file, line, src_function_name, level, log_group, message)  # Add the log group to the log tuple
         return logs
 
