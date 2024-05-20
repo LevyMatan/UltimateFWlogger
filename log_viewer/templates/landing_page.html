@@ -8,10 +8,9 @@
     <div>
         <h1 class="title">PHY LOGGER</h1>
         <div class="button-container">
-            <a class="button" href="{{url_for('get_logs')}}">Go to Logs</a>
-            <a class="button" href="{{url_for('generator_page')}}">Go to Log Generator</a>
-            <a class="button" id="configureDeviceButton">Configure Device</a>
-
+            <button class="button" onclick="window.location.href='{{url_for('get_logs')}}'">Go to Logs</button>
+            <button class="button" onclick="window.location.href='{{url_for('generator_page')}}'">Go to Log Generator</button>
+            <button class="button" id="configureDeviceButton">Configure Device</button>
         </div>
     </div>
     <div id="configureDeviceForm" style="display: none;">
@@ -21,7 +20,6 @@
                 <select id="device" name="device">
                     <option value="device1">Device 1</option>
                     <option value="device2">Device 2</option>
-                    <!-- Add more options as needed -->
                 </select>
             </div>
             <div>
