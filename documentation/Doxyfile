@@ -3,21 +3,21 @@
 # To create a new Doxyfile containing all available options, call `doxygen -g`
 
 # Get Project name and version from CMake
-PROJECT_NAME = @DOXYGEN_PROJECT_NAME@
-PROJECT_NUMBER = @DOXYGEN_PROJECT_VERSION@
+PROJECT_NAME = FwDeviceMockup
+PROJECT_NUMBER = 1.0
 
 # Add sources
-INPUT = @DOXYGEN_PROJECT_ROOT@/README.md @DOXYGEN_PROJECT_ROOT@/include @DOXYGEN_PROJECT_ROOT@/documentation/pages
+INPUT = /workspaces/UltimateFWlogger/documentation/../README.md /workspaces/UltimateFWlogger/documentation/../include /workspaces/UltimateFWlogger/documentation/../documentation/pages
 EXTRACT_ALL = YES
 RECURSIVE = YES
-OUTPUT_DIRECTORY = @DOXYGEN_OUTPUT_DIRECTORY@
+OUTPUT_DIRECTORY = /workspaces/UltimateFWlogger/documentation/doxygen
 
 # Use the README as a main page
-USE_MDFILE_AS_MAINPAGE = @DOXYGEN_PROJECT_ROOT@/README.md
+USE_MDFILE_AS_MAINPAGE = /workspaces/UltimateFWlogger/documentation/../README.md
 
 # set relative include paths
 FULL_PATH_NAMES = YES
-STRIP_FROM_PATH = @DOXYGEN_PROJECT_ROOT@/include @DOXYGEN_PROJECT_ROOT@
+STRIP_FROM_PATH = /workspaces/UltimateFWlogger/documentation/../include /workspaces/UltimateFWlogger/documentation/..
 
 # We use m.css to generate the html documentation, so we only need XML output
 GENERATE_XML = YES
