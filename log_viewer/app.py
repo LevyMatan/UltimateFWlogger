@@ -12,7 +12,7 @@ from sample_logs_generator import LogGenerator
 from threading import Thread
 from dev_interactions import FW_LOG_MODULE_TYPE
 from forms import LogGenForm
-
+from log_reader import LogReader
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
@@ -100,6 +100,20 @@ def clear_logs():
     """
     db_thread.clear_logs()
     return jsonify(message='Logs cleared')
+
+@app.route('/start_device', methods=['GET'])
+def start_device():
+    """
+    Start a process, that will start a device that generates logs.
+    Also another process will read the logs and insert them into the database.
+
+    Returns:
+        A JSON response with a message indicating that the device was started.
+    """
+    # Start a thread that will run the LogReader class
+    log_reader = LogReader()
+    
+    return jsonify(message='Device started')
 
 def get_app():
     return app
