@@ -123,7 +123,7 @@ const char *strip_path(const char *path);
 #define FW_LOG_ERROR(fmt, ...) \
     fw_log(TRACE_LEVEL_ERROR, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
 #define FW_LOG_WARN(fmt, ...) \
-    fw_log(TRACE_LEVEL_WARN, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
+    fw_log(TRACE_LEVEL_WARNING, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
 
 #define FW_LOG_ENTERED_FUNCTION() FW_LOG_DEBUG("Entered function: %s\n", __func__)
 
