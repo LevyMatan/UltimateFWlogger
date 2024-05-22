@@ -1,16 +1,21 @@
+'''
+app.py is the main entry point for the Flask application.
+It contains the routes and logic for the web application, including rendering templates, 
+handling form submissions, and interacting with the database.
+'''
+
 from flask import Flask, render_template, jsonify, request, url_for, redirect
-from logger_db import DatabaseThread, Log
+from logger_db import DatabaseThread
 import webbrowser
 import os
 from sample_logs_generator import LogGenerator
 from threading import Thread
 from dev_interactions import FW_LOG_MODULE_TYPE
-from flaskwebgui import FlaskUI
 from forms import LogGenForm
+
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
-ui = FlaskUI(app, port=8080)
 
 db_thread = DatabaseThread('logs.db')
 gen = LogGenerator(db_thread)
@@ -44,8 +49,12 @@ def get_latest_logs():
     Returns:
         The latest logs in JSON format.
     """
-    logs = db_thread.get_new_logs()
-    return jsonify(data=[log.to_dict() for log in logs])
+    try:
+        logs = db_thread.get_new_logs()
+        return jsonify(data=[log.to_dict() for log in logs]), 200
+    except Exception as e:
+        print(e)
+        return str(e), 500
 
 @app.route('/generator_page', methods=['GET', 'POST'])
 def generator_page():
@@ -92,11 +101,12 @@ def clear_logs():
     db_thread.clear_logs()
     return jsonify(message='Logs cleared')
 
+def get_app():
+    return app
+
 if __name__ == '__main__':
     url = "http://localhost:8080/"
     webbrowser.open(url, new=2)  # open in new tab, if possible
     app.run(debug=True, port=8080)
-    # ui.run()
     db_thread.close()
-    # Delete the DB file
     os.remove('logs.db')

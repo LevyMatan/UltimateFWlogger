@@ -1,14 +1,10 @@
-from sqlalchemy import create_engine, Column, String, Integer, Sequence, Enum
+from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 from sqlalchemy import inspect
-from sqlalchemy.ext.declarative import declarative_base
 import threading
-import datetime
-import random
 import logging
-from dev_interactions import FW_LOG_MODULE_TYPE  # Import the enum
 from log_def import Log, Base  # Import the Log class
-
+import time
 
 class DatabaseThread(threading.Thread):
     def __init__(self, db_name):
@@ -34,14 +30,14 @@ class DatabaseThread(threading.Thread):
         self.session.add(log)
         self.session.commit()
 
-        # Check if total logs is greater than 20000
-        total_logs = self.session.query(Log).count()
-        if total_logs > 20000:
-            # Get the first 10000 logs
-            logs_to_delete = self.session.query(Log).order_by(asc(Log.id)).limit(10000)
-            for log in logs_to_delete:
-                self.session.delete(log)
-            self.session.commit()
+        # # Check if total logs is greater than 20000
+        # total_logs = self.session.query(Log).count()
+        # if total_logs > 20000:
+        #     # Get the first 10000 logs
+        #     logs_to_delete = self.session.query(Log).order_by(asc(Log.id)).limit(10000)
+        #     for log in logs_to_delete:
+        #         self.session.delete(log)
+        #     self.session.commit()
 
     def set_logs_filter(self, attribute, value, operator='=='):
         """
@@ -59,7 +55,6 @@ class DatabaseThread(threading.Thread):
             self.query = self.query.filter(getattr(Log, attribute).like('%' + value + '%'))
         elif operator == '!=':
             self.query = self.query.filter(getattr(Log, attribute) != value)
-
 
     def get_all_logs(self):
             """
@@ -80,6 +75,10 @@ class DatabaseThread(threading.Thread):
         Returns:
             A list of Log objects representing the new logs.
         """
+        while not self.session.is_active:
+            logging.debug("Waiting for session to become active...")
+            time.sleep(1)  # Wait for 1 second
+
         if self.last_read_id is None:
             logs = self.session.query(Log).all()
             logging.debug(f"Retrieved all logs: {logs}")

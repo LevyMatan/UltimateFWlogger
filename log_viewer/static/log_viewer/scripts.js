@@ -1,5 +1,4 @@
 $(document).ready(function () {
-    var columNames = ['timestamp', 'file', 'src_function_name', 'level', 'log_group', 'msg']
 
     var table = $('#logTable').DataTable({
         pageLength: 1000,
@@ -7,8 +6,10 @@ $(document).ready(function () {
         scrollY: "97%",
         scrollCollapse: false,
         stripeClasses: ['odd-row', 'even-row'],
-        ajax: "/latest_logs",
         order: [[0, "desc"]],
+        deferRender:    true,
+        scroller:       true,
+        select:         true,
         columns: [
             { data: "timestamp" },
             { data: "file_line" },
@@ -33,13 +34,32 @@ $(document).ready(function () {
         },
     });
 
-    table.on( 'draw', function () {
-        var body = $( '.search-hilite', table.table().body() );
+    var selectedRowId;
 
+    table.on('click', 'tr', function () {
+        if ($(this).hasClass('selected')) {
+            $(this).removeClass('selected');
+            selectedRowId = null;
+        } else {
+            table.$('tr.selected').removeClass('selected');
+            $(this).addClass('selected');
+            selectedRowId = table.row(this).id();
+        }
+    });
+    
+    table.on('draw', function () {
+        var body = $('.search-hilite', table.table().body());
+    
         body.unhighlight();
-        // Debug: show search box value
-        body.highlight( table.search() );  
-    } );
+        body.highlight(table.search());
+    
+        if (selectedRowId) {
+            var row = table.row('#' + selectedRowId);
+            if (row.length) {
+                row.nodes().to$().addClass('selected');
+            }
+        }
+    });
 
     setInterval(function () {
         fetch('/latest_logs')
@@ -58,7 +78,7 @@ $(document).ready(function () {
         .catch(error => {
             console.error('Error:', error);
         });
-    }, 500);
+    }, 1500);
 
     // Initialize the variable to hold the bitwise OR value
     var logGroupValue = 0;
@@ -134,6 +154,75 @@ $(document).ready(function () {
 
     });
 
-    
+    var lastFoundIndex = -1;
+    var lastFoundText = "";
+
+    function findAndScrollToRow(text, direction) {
+        var foundIndex = -1;
+        if (text !== lastFoundText) {
+            lastFoundIndex = -1;
+        }
+
+        if (lastFoundIndex === -1) {
+            // direction does not matter, set as next
+            direction = "next";
+        }
+
+        if (direction !== "next" && direction !== "back") {
+            alert('Invalid direction.');
+            return;
+        }
+        if (direction === "next") {
+            // Iterate through each row's data to find the text
+            table.rows().every(function(rowIdx, tableLoop, rowLoop) {
+                // Start searching from the next row after the last found index
+                if (rowIdx <= lastFoundIndex) {
+                    foundIndex = -1;
+                    return;
+                }
+                var data = this.data();
+                if (data && data['msg'].includes(text)) {
+                    foundIndex = rowIdx;
+                    return false; // Break the loop once the text is found
+                }
+            });
+        } else {
+            var totalRows = table.rows().count();
+            var start_from = totalRows;
+            if (lastFoundIndex !== -1) {
+                start_from = lastFoundIndex;
+            }
+            
+            for (var i = start_from - 1; i >= 0; i--) {
+                var row = table.row(i);
+                if (row['msg'].includes(text)) {
+                    foundIndex = rowIdx;
+                    return false; // Break the loop once the text is found
+                }
+            }
+        }
+
+        if (foundIndex !== -1) {
+            // Update the last found index
+            lastFoundIndex = foundIndex;
+            console.log('Found at index:', foundIndex);
+            // Scroll to the found row
+            table.row(foundIndex).scrollTo();
+
+            // Optionally, highlight the row
+            $(table.row(foundIndex).node()).addClass('highlight');
+        } else {
+            alert('Text not found in the table.');
+        }
+    }
+
+    $('#jumpToBackButton').on('click', function() {
+        var searchText = $('#jumpTo').val();
+        findAndScrollToRow(searchText, "back");
+    });
+    $('#jumpToNextButton').on('click', function() {
+        var searchText = $('#jumpTo').val();
+        findAndScrollToRow(searchText, "next");
+    });
 
 });
