@@ -18,10 +18,11 @@
 #include <stdio.h>
 
 #include "uthash.h"
-// #include "utils/generated_enum_dict.h"
+#include "generated_enum.h"
 
 #define VAR_TO_IDX(x) (typename_to_idx(typename(x)))
-// #define ENUM_STRING(x) g_a_getters[VAR_TO_IDX(x)](&(x))
+#define ENUM_STRING_FROM_TYPE(x, _type) g_a_getters[typename_to_idx(_type)](&(x))
+#define ENUM_STRING(x) g_a_getters[VAR_TO_IDX(x)](&(x))
 
 /**
  * @brief

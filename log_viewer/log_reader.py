@@ -11,7 +11,7 @@ class LogReader():
         self.db_thread.start()
 
         # Start the FwDeviceMockup process
-        self.process = subprocess.Popen(['/workspaces/UltimateFWlogger/build/standalone/FwDeviceMockup'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        self.process = subprocess.Popen(['/workspaces/UltimateFWlogger/build/FwDeviceMockup'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # Start a thread to read the output
         self.output_thread = threading.Thread(target=self.read_output)
         self.output_thread.start()

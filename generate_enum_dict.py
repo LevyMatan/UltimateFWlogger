@@ -177,7 +177,7 @@ if __name__ == "__main__":
 
     # Add the arguments
     parser.add_argument('--SourceDir', metavar='source_dir', type=str, nargs='*', help='the source directories to scan for enums', default=['./source', './include'])
-    parser.add_argument('--OutputFile', metavar='output_file', type=str, help='the output file', default='./generated_enum_dict.c')
+    parser.add_argument('--OutputFile', metavar='output_file', type=str, help='the output file', default='./generated_enum.txt')
     
     # Parse the arguments
     args = parser.parse_args()
@@ -204,6 +204,8 @@ if __name__ == "__main__":
         dict_filename = args.OutputFile.replace('.txt', '_dict.c')
         generate_enum_dict_file(enums, dict_filename)
         getter_filename = args.OutputFile.replace('.txt', '_getter.c')
+        print(getter_filename)
         generate_getter_functions_file(enums, builtin_types, getter_filename)
         header_filename = args.OutputFile.replace('.txt', '.h')
+        print(header_filename)
         generate_header_file(enums, builtin_types, header_filename)
