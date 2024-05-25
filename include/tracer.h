@@ -15,13 +15,14 @@
  */
 
 #  include <stdbool.h>
-// #include <stdio.h>
-
 #  include "generated_enum.h"
 #  include "uthash.h"
 
+#  ifdef __APPLE__
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#  endif
+
 #  define VAR_TO_IDX(x) (typename_to_idx(typename(x)))
 #  define ENUM_STRING_FROM_TYPE(x, _type) g_a_getters[typename_to_idx(_type)](&(x))
 #  define ENUM_STRING(x) g_a_getters[VAR_TO_IDX(x)](&(x))
@@ -131,4 +132,6 @@ const char *strip_path(const char *path);
 #  define FW_LOG_ENTERED_FUNCTION() FW_LOG_DEBUG("Entered function: %s\n", __func__)
 
 #endif  // TRACE_H
+#  ifdef __APPLE__
 #pragma clang diagnostic pop
+#  endif
