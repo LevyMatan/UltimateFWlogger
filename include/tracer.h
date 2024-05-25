@@ -1,5 +1,5 @@
 #ifndef TRACE_H
-#define TRACE_H
+#  define TRACE_H
 /**
  * @file trace.h
  * @author Matan Levy (levymatanlevy@gmail.com)
@@ -14,27 +14,27 @@
  *
  */
 
-#include <stdbool.h>
+#  include <stdbool.h>
 // #include <stdio.h>
 
-#include "uthash.h"
-#include "generated_enum.h"
+#  include "generated_enum.h"
+#  include "uthash.h"
 
-#pragma clang diagnostic push
-#pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
-#define VAR_TO_IDX(x) (typename_to_idx(typename(x)))
-#define ENUM_STRING_FROM_TYPE(x, _type) g_a_getters[typename_to_idx(_type)](&(x))
-#define ENUM_STRING(x) g_a_getters[VAR_TO_IDX(x)](&(x))
+#  pragma clang diagnostic push
+#  pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
+#  define VAR_TO_IDX(x) (typename_to_idx(typename(x)))
+#  define ENUM_STRING_FROM_TYPE(x, _type) g_a_getters[typename_to_idx(_type)](&(x))
+#  define ENUM_STRING(x) g_a_getters[VAR_TO_IDX(x)](&(x))
 
 /**
  * @brief
  *
  */
 typedef enum trace_level {
-    TRACE_LEVEL_DEBUG,
-    TRACE_LEVEL_INFO,
-    TRACE_LEVEL_WARNING,
-    TRACE_LEVEL_ERROR
+  TRACE_LEVEL_DEBUG,
+  TRACE_LEVEL_INFO,
+  TRACE_LEVEL_WARNING,
+  TRACE_LEVEL_ERROR
 } trace_level_e;
 
 /**
@@ -42,11 +42,11 @@ typedef enum trace_level {
  *
  */
 typedef enum trace_status {
-    TRACE_STATUS_OK,
-    TRACE_STATUS_FAILED_TO_READ_CONF_FILE,
-    TRACE_STATUS_FAILED_TO_CONVERT_FUNC_STRING,
-    TRACE_STATUS_GENERAL_FAIL,
-    TRACE_STATUS_DEBUG_DISABLED,
+  TRACE_STATUS_OK,
+  TRACE_STATUS_FAILED_TO_READ_CONF_FILE,
+  TRACE_STATUS_FAILED_TO_CONVERT_FUNC_STRING,
+  TRACE_STATUS_GENERAL_FAIL,
+  TRACE_STATUS_DEBUG_DISABLED,
 } trace_status_e;
 
 /**
@@ -87,11 +87,11 @@ bool is_function_enabled(const char *func);
 int typename_to_idx(const char *type_name);
 
 typedef struct func_node {
-    char func_name[1000];
-    char file_name[1000];
-    bool is_enabled;
-    int idx;
-    UT_hash_handle hh;
+  char func_name[1000];
+  char file_name[1000];
+  bool is_enabled;
+  int idx;
+  UT_hash_handle hh;
 } func_node_t;
 
 /**
@@ -109,26 +109,26 @@ trace_status_e init_tracer(const char *conf_file_path);
  * @return const char*
  */
 const char *strip_path(const char *path);
-#define __FILENAME__ (strip_path(__FILE__))
+#  define __FILENAME__ (strip_path(__FILE__))
 
-#ifdef DEBUG_ENABLE
-#    define FW_LOG_DEBUG(fmt, ...)                                                               \
-        {                                                                                        \
-            if (is_function_enabled(__func__))                                                   \
-                fw_log(TRACE_LEVEL_DEBUG, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__); \
-        }
-#else
+#  ifdef DEBUG_ENABLE
+#    define FW_LOG_DEBUG(fmt, ...)                                                         \
+      {                                                                                    \
+        if (is_function_enabled(__func__))                                                 \
+          fw_log(TRACE_LEVEL_DEBUG, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__); \
+      }
+#  else
 #    define FW_LOG_DEBUG(fmt, ...)
-#endif
+#  endif
 
-#define FW_LOG_INFO(fmt, ...) \
+#  define FW_LOG_INFO(fmt, ...) \
     fw_log(TRACE_LEVEL_INFO, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
-#define FW_LOG_ERROR(fmt, ...) \
+#  define FW_LOG_ERROR(fmt, ...) \
     fw_log(TRACE_LEVEL_ERROR, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
-#define FW_LOG_WARN(fmt, ...) \
+#  define FW_LOG_WARN(fmt, ...) \
     fw_log(TRACE_LEVEL_WARNING, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
 
-#define FW_LOG_ENTERED_FUNCTION() FW_LOG_DEBUG("Entered function: %s\n", __func__)
+#  define FW_LOG_ENTERED_FUNCTION() FW_LOG_DEBUG("Entered function: %s\n", __func__)
 
 #endif  // TRACE_H
 #pragma clang diagnostic pop

@@ -26,12 +26,8 @@ include(cmake/CPM.cmake)
 # PackageProject.cmake will be used to make our target installable
 CPMAddPackage("gh:TheLartians/PackageProject.cmake@1.8.0")
 
-# CPMAddPackage(
-#   NAME fmt
-#   GIT_TAG 9.1.0
-#   GITHUB_REPOSITORY fmtlib/fmt
-#   OPTIONS "FMT_INSTALL YES" # create an installable target
-# )
+# CPMAddPackage( NAME fmt GIT_TAG 9.1.0 GITHUB_REPOSITORY fmtlib/fmt OPTIONS "FMT_INSTALL YES" #
+# create an installable target )
 
 # ---- Add source files ----
 
@@ -55,8 +51,7 @@ if(CMAKE_BUILD_TYPE STREQUAL "Debug")
 endif()
 get_target_property(MY_PROJECT_COMPILE_OPTIONS ${PROJECT_NAME} COMPILE_OPTIONS)
 message(STATUS "Compile options: ${MY_PROJECT_COMPILE_OPTIONS}")
-# Link dependencies
-# target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
+# Link dependencies target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 
 target_include_directories(
   ${PROJECT_NAME} PUBLIC $<BUILD_INTERFACE:${PROJECT_SOURCE_DIR}/include>

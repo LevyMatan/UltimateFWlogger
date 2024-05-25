@@ -18,26 +18,14 @@ char* trace_status_dict[5] = {
 };
 
 char* state_machines_types_dict[5] = {
-    "MAIN_STATE_MACHINE",
-    "SECONDARY_STATE_MACHINE",
-    "TERTIARY_STATE_MACHINE",
-    "QUATERNARY_STATE_MACHINE",
-    "QUINTENARY_STATE_MACHINE",
+    "MAIN_STATE_MACHINE",       "SECONDARY_STATE_MACHINE",  "TERTIARY_STATE_MACHINE",
+    "QUATERNARY_STATE_MACHINE", "QUINTENARY_STATE_MACHINE",
 };
 
 char* main_state_machine_events_dict[5] = {
-    "EVENT_START",
-    "EVENT_STOP",
-    "EVENT_PAUSE",
-    "EVENT_RESUME",
-    "EVENT_RESET",
+    "EVENT_START", "EVENT_STOP", "EVENT_PAUSE", "EVENT_RESUME", "EVENT_RESET",
 };
 
 char* state_machine_states_dict[5] = {
-    "STATE_IDLE",
-    "STATE_RUNNING",
-    "STATE_PAUSED",
-    "STATE_STOPPED",
-    "STATE_ERROR",
+    "STATE_IDLE", "STATE_RUNNING", "STATE_PAUSED", "STATE_STOPPED", "STATE_ERROR",
 };
-
