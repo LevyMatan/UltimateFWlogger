@@ -3,6 +3,5 @@ document.getElementById('configureDeviceButton').addEventListener('click', funct
 });
 
 document.getElementById('configureDeviceForm').addEventListener('submit', function(event) {
-    event.preventDefault();
     document.getElementById('configureDeviceForm').style.display = 'none';
 });

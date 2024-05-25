@@ -11,7 +11,7 @@ import os
 from sample_logs_generator import LogGenerator
 from threading import Thread
 from dev_interactions import FW_LOG_MODULE_TYPE
-from forms import LogGenForm, FilterForm
+from forms import LogGenForm, FilterForm, StartDeviceForm
 from log_reader import LogReader
 from log_def import Log
 
@@ -29,7 +29,8 @@ def index():
     Returns:
         The rendered static_page.html template.
     """
-    return render_template('landing_page.html')
+    start_device_form = StartDeviceForm()
+    return render_template('landing_page.html', start_device_form=start_device_form)
 
 @app.route('/get_logs', methods=['GET'])
 def get_logs():
@@ -40,7 +41,6 @@ def get_logs():
         The rendered template with the logs.
     """
     logs = db_thread.get_all_logs()
-    print(logs[-1])
     filter_form = FilterForm()
     return render_template('log_viewer.html', logs=logs, log_groups=FW_LOG_MODULE_TYPE, filter_form=filter_form)
 
@@ -104,7 +104,7 @@ def clear_logs():
     db_thread.clear_logs()
     return jsonify(message='Logs cleared')
 
-@app.route('/start_device', methods=['GET'])
+@app.route('/start_device', methods=['POST'])
 def start_device():
     """
     Start a process, that will start a device that generates logs.
@@ -114,9 +114,10 @@ def start_device():
         A JSON response with a message indicating that the device was started.
     """
     # Start a thread that will run the LogReader class
-    log_reader = LogReader()
-
-    return jsonify(message='Device started')
+    print('Starting device...')
+    LogReader()
+    start_device_form = StartDeviceForm()
+    return render_template('landing_page.html', start_device_form=start_device_form)
 
 def get_app():
     return app
@@ -140,13 +141,6 @@ def filter_logs():
             column_name = filter_form.column_name.data
             filter_value = filter_form.filter_value.data
             logs = db_thread.filter_logs(column_name, filter_value)
-            for log in logs:
-                print(log.timestamp)
-                print(log.file)
-                print(log.src_function_name)
-                print(log.level)
-                print(log.log_group.name)
-                print(log.msg)
             return render_template('log_viewer.html', logs=logs, log_groups=FW_LOG_MODULE_TYPE, filter_form=filter_form)
     return render_template('log_viewer.html', flogs=logs, log_groups=FW_LOG_MODULE_TYPE, filter_form=filter_form)
 

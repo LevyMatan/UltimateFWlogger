@@ -30,3 +30,14 @@ class FilterForm(FlaskForm):
     def __init__(self, *args, **kwargs):
         super(FilterForm, self).__init__(*args, **kwargs)
         self.column_name.choices = [(column, column) for column in Log.__table__.columns.keys()]
+
+class StartDeviceForm(FlaskForm):
+    """
+    Represents a form used for starting a device.
+
+    Attributes:
+        device_id (StringField): The text field for entering the device ID.
+        submit (SubmitField): The submit button for starting the device.
+    """
+    device_id = StringField('Device ID', [validators.InputRequired()])
+    submit = SubmitField('Start Device')

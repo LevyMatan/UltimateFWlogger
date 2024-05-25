@@ -11,7 +11,7 @@ class LogReader():
         self.db_thread.start()
 
         # Start the FwDeviceMockup process
-        self.process = subprocess.Popen(['/workspaces/UltimateFWlogger/build/FwDeviceMockup'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
+        self.process = subprocess.Popen(['/Users/matanlevy/GitHub/UltimateFWlogger/build/standalone/FwDeviceMockup'], stdout=subprocess.PIPE, stderr=subprocess.STDOUT)
         # Start a thread to read the output
         self.output_thread = threading.Thread(target=self.read_output)
         self.output_thread.start()
@@ -27,7 +27,7 @@ class LogReader():
 
             # Process the output
             self.process_output(output)
-    
+
     def process_output(self, output):
         """
         Callback method triggered when the shared log file is modified.
@@ -43,7 +43,7 @@ class LogReader():
             None
         """
         # Parse the output
-        match = re.match(r'\[(\w+)\] (.*):(\d+):(\w+): (.*)', output)  
+        match = re.match(r'\[(\w+)\] (.*):(\d+):(\w+): (.*)', output)
         if match:
             level = match.group(1)
             file = match.group(2)
