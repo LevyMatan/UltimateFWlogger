@@ -1,6 +1,6 @@
 '''
 app.py is the main entry point for the Flask application.
-It contains the routes and logic for the web application, including rendering templates, 
+It contains the routes and logic for the web application, including rendering templates,
 handling form submissions, and interacting with the database.
 '''
 
@@ -11,8 +11,9 @@ import os
 from sample_logs_generator import LogGenerator
 from threading import Thread
 from dev_interactions import FW_LOG_MODULE_TYPE
-from forms import LogGenForm
+from forms import LogGenForm, FilterForm
 from log_reader import LogReader
+from log_def import Log
 
 app = Flask(__name__)
 app.config['SECRET_KEY'] = 'your-secret-key'
@@ -39,7 +40,9 @@ def get_logs():
         The rendered template with the logs.
     """
     logs = db_thread.get_all_logs()
-    return render_template('log_viewer.html', logs=logs, log_groups=FW_LOG_MODULE_TYPE)
+    print(logs[-1])
+    filter_form = FilterForm()
+    return render_template('log_viewer.html', logs=logs, log_groups=FW_LOG_MODULE_TYPE, filter_form=filter_form)
 
 @app.route('/latest_logs', methods=['GET'])
 def get_latest_logs():
@@ -73,7 +76,7 @@ def generator_page():
             thread = Thread(target=gen.slow_log_gen, args=(num_of_logs, delay_betweeen_logs))
             thread.start()
             return redirect(url_for('index'))
-        
+
     return render_template('log_generator.html', log_generator_form=log_generator_form)
 
 @app.route('/upload_logs', methods=['POST'])
@@ -112,11 +115,40 @@ def start_device():
     """
     # Start a thread that will run the LogReader class
     log_reader = LogReader()
-    
+
     return jsonify(message='Device started')
 
 def get_app():
     return app
+
+@app.route('/filter_logs', methods=['GET', 'POST'])
+def filter_logs():
+    """
+    Filter logs based on user input.
+
+    This function handles the filtering of logs based on the user's input from the filter form.
+    It retrieves the column name and filter value from the form, and uses them to filter the logs
+    using the `filter_logs` method of the `db_thread` object. The filtered logs are then passed to
+    the log_viewer.html template along with the log groups and filter form.
+
+    Returns:
+        The rendered log_viewer.html template with the filtered logs, log groups, and filter form.
+    """
+    filter_form = FilterForm()
+    if request.method == 'POST':
+        if filter_form.validate_on_submit():
+            column_name = filter_form.column_name.data
+            filter_value = filter_form.filter_value.data
+            logs = db_thread.filter_logs(column_name, filter_value)
+            for log in logs:
+                print(log.timestamp)
+                print(log.file)
+                print(log.src_function_name)
+                print(log.level)
+                print(log.log_group.name)
+                print(log.msg)
+            return render_template('log_viewer.html', logs=logs, log_groups=FW_LOG_MODULE_TYPE, filter_form=filter_form)
+    return render_template('log_viewer.html', flogs=logs, log_groups=FW_LOG_MODULE_TYPE, filter_form=filter_form)
 
 if __name__ == '__main__':
     url = "http://localhost:8080/"

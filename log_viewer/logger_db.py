@@ -1,6 +1,5 @@
-from sqlalchemy import create_engine
+from sqlalchemy import create_engine, inspect, asc, text
 from sqlalchemy.orm import sessionmaker
-from sqlalchemy import inspect
 import threading
 import logging
 from log_def import Log, Base  # Import the Log class
@@ -9,6 +8,7 @@ import time
 class DatabaseThread(threading.Thread):
     def __init__(self, db_name):
         threading.Thread.__init__(self)
+        self._lock = threading.Lock()
         self.engine = create_engine('sqlite:///' + db_name)
         Session = sessionmaker(bind=self.engine)
         Base.metadata.create_all(self.engine)
@@ -89,6 +89,32 @@ class DatabaseThread(threading.Thread):
         if logs:
             self.last_read_id = logs[-1].id
 
+        return logs
+
+    def clear_logs(self):
+        """
+        Clear all logs from the database.
+
+        Returns:
+            None
+        """
+        self.session.query(Log).delete()
+        self.session.commit()
+
+    def filter_logs(self, column_name, filter_value):
+        """
+        Filters logs based on the specified column name and filter value.
+
+        Args:
+            column_name (str): The name of the column to filter on.
+            filter_value: The value to filter for in the specified column.
+
+        Returns:
+            list: A list of logs that match the filter criteria.
+        """
+        with self._lock:
+            stmt = text(f"SELECT * FROM logs WHERE {column_name} = :filter_value")
+            logs = self.session.query(Log).from_statement(stmt).params(filter_value=filter_value).all()
         return logs
 
     def close(self):

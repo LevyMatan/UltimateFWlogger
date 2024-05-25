@@ -15,7 +15,7 @@
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/scroller/2.0.4/css/scroller.dataTables.min.css">
     <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/select/1.3.3/css/select.dataTables.min.css">
     <link rel="stylesheet" href="{{ url_for('static', filename='log_viewer/styles.css') }}">
-  
+
     <!-- Scripts -->
     <script src="https://code.jquery.com/jquery-3.5.1.js"></script>
     <script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
@@ -69,7 +69,19 @@
                 <button class="button" id="sidebarButton">Send to Device</button>
 
                 <hr>  <!-- Separator line -->
-
+                <h2>Filter Logs</h2>
+                <form action="{{ url_for('filter_logs') }}" method="post">
+                    {{ filter_form.hidden_tag() }}
+                    <div>
+                        {{ filter_form.column_name.label }} {{ filter_form.column_name() }}
+                    </div>
+                    <div>
+                        {{ filter_form.filter_value.label }} {{ filter_form.filter_value() }}
+                    </div>
+                    <div>
+                        {{ filter_form.submit() }}
+                    </div>
+                </form>
             </div>
 
     <div class="col-10">
@@ -102,7 +114,7 @@
                         <th><input data-name="log_group" type="text" id="log_group-filter" class="column-filter" data-column="4"></th>
                         <th><input type="text" id="msg-filter" placeholder="Filter by message">
                             <button id="apply-filter">Apply Filter</button>
-                        </th> 
+                        </th>
                     </tr> -->
                 </thead>
                 <tbody>

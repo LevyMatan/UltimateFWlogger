@@ -3,3 +3,6 @@
 /cpm_modules
 .DS_Store
 log_viewer/__pycache__/*
+log_viewer/bin
+log_viewer/lib
+**.cfg

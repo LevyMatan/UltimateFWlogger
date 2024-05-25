@@ -6,7 +6,6 @@ $(document).ready(function () {
         scrollY: "97%",
         scrollCollapse: false,
         stripeClasses: ['odd-row', 'even-row'],
-        order: [[0, "desc"]],
         deferRender:    true,
         scroller:       true,
         select:         true,
@@ -46,13 +45,13 @@ $(document).ready(function () {
             selectedRowId = table.row(this).id();
         }
     });
-    
+
     table.on('draw', function () {
         var body = $('.search-hilite', table.table().body());
-    
+
         body.unhighlight();
         body.highlight(table.search());
-    
+
         if (selectedRowId) {
             var row = table.row('#' + selectedRowId);
             if (row.length) {
@@ -112,7 +111,7 @@ $(document).ready(function () {
         var value = parseInt(checkbox.value);
         // Print the logGroupValue in binary format to the console
         // console.log(value.toString(2));
-        
+
         // If the checkbox is checked, do a bitwise OR operation with the value
         // If the checkbox is unchecked, do a bitwise AND operation with the bitwise NOT of the value
         // Convert logGroupValue to an unsigned 32-bit integer
@@ -124,7 +123,7 @@ $(document).ready(function () {
         turn_off_value >>>= 0;
         // console.log(turn_off_value.toString(2));
         logGroupValue = checkbox.checked ? turn_on_value : turn_off_value;
-        
+
         console.log(logGroupValue.toString(2));
     }
 
@@ -192,7 +191,7 @@ $(document).ready(function () {
             if (lastFoundIndex !== -1) {
                 start_from = lastFoundIndex;
             }
-            
+
             for (var i = start_from - 1; i >= 0; i--) {
                 var row = table.row(i);
                 if (row['msg'].includes(text)) {
