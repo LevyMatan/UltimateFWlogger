@@ -1,5 +1,5 @@
 #ifndef TRACE_H
-#  define TRACE_H
+#define TRACE_H
 /**
  * @file trace.h
  * @author Matan Levy (levymatanlevy@gmail.com)
@@ -14,18 +14,19 @@
  *
  */
 
-#  include <stdbool.h>
-#  include "generated_enum.h"
-#  include "uthash.h"
+#include <stdbool.h>
 
-#  ifdef __APPLE__
+#include "generated_enum.h"
+#include "uthash.h"
+
+#ifdef __APPLE__
 #  pragma clang diagnostic push
 #  pragma clang diagnostic ignored "-Wgnu-zero-variadic-macro-arguments"
-#  endif
+#endif
 
-#  define VAR_TO_IDX(x) (typename_to_idx(typename(x)))
-#  define ENUM_STRING_FROM_TYPE(x, _type) g_a_getters[typename_to_idx(_type)](&(x))
-#  define ENUM_STRING(x) g_a_getters[VAR_TO_IDX(x)](&(x))
+#define VAR_TO_IDX(x) (typename_to_idx(typename(x)))
+#define ENUM_STRING_FROM_TYPE(x, _type) g_a_getters[typename_to_idx(_type)](&(x))
+#define ENUM_STRING(x) g_a_getters[VAR_TO_IDX(x)](&(x))
 
 /**
  * @brief
@@ -110,28 +111,28 @@ trace_status_e init_tracer(const char *conf_file_path);
  * @return const char*
  */
 const char *strip_path(const char *path);
-#  define __FILENAME__ (strip_path(__FILE__))
+#define __FILENAME__ (strip_path(__FILE__))
 
-#  ifdef DEBUG_ENABLE
-#    define FW_LOG_DEBUG(fmt, ...)                                                         \
-      {                                                                                    \
-        if (is_function_enabled(__func__))                                                 \
-          fw_log(TRACE_LEVEL_DEBUG, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__); \
-      }
-#  else
-#    define FW_LOG_DEBUG(fmt, ...)
-#  endif
+#ifdef DEBUG_ENABLE
+#  define FW_LOG_DEBUG(fmt, ...)                                                         \
+    {                                                                                    \
+      if (is_function_enabled(__func__))                                                 \
+        fw_log(TRACE_LEVEL_DEBUG, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__); \
+    }
+#else
+#  define FW_LOG_DEBUG(fmt, ...)
+#endif
 
-#  define FW_LOG_INFO(fmt, ...) \
-    fw_log(TRACE_LEVEL_INFO, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
-#  define FW_LOG_ERROR(fmt, ...) \
-    fw_log(TRACE_LEVEL_ERROR, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
-#  define FW_LOG_WARN(fmt, ...) \
-    fw_log(TRACE_LEVEL_WARNING, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define FW_LOG_INFO(fmt, ...) \
+  fw_log(TRACE_LEVEL_INFO, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define FW_LOG_ERROR(fmt, ...) \
+  fw_log(TRACE_LEVEL_ERROR, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
+#define FW_LOG_WARN(fmt, ...) \
+  fw_log(TRACE_LEVEL_WARNING, __FILENAME__, __func__, __LINE__, fmt, ##__VA_ARGS__)
 
-#  define FW_LOG_ENTERED_FUNCTION() FW_LOG_DEBUG("Entered function: %s\n", __func__)
+#define FW_LOG_ENTERED_FUNCTION() FW_LOG_DEBUG("Entered function: %s\n", __func__)
 
 #endif  // TRACE_H
-#  ifdef __APPLE__
+#ifdef __APPLE__
 #pragma clang diagnostic pop
-#  endif
+#endif
