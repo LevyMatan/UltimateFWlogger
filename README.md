@@ -1,3 +1,5 @@
+# Ultimate Firmware Logger
+
 [![MacOS](https://github.com/LevyMatanTheLartians/ModernCppStarterrkflows/macos.yml/badge.svg)](https://github.comTheLartians/ModernCppStarteractions/workflows/macos.yml)
 [![Ubuntu](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/ubuntu.yml)
 [![Style](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/style.yml/badge.svg)](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/style.yml)
@@ -5,9 +7,7 @@
 [![Standalone](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/standalone.yml/badge.svg)](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/standalone.yml)
 [![codecov](https://codecov.io/gh/TheLartians/ModernCppStarter/branch/master/graph/badge.svg)](https://codecov.io/gh/TheLartians/ModernCppStarter)
 
-# Ultimate Firmware Logger
-
-A web based viewer for logs with ability to search and filter logs.
+web based viewer for logs with ability to search and filter logs.
 An header library to be included in your C/C++ projects to enbable easy traceing of embedded code.
 
 ## Features
