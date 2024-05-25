@@ -1,8 +1,8 @@
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/MacOS/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Windows/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Ubuntu/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Style/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
-[![Actions Status](https://github.com/TheLartians/ModernCppStarter/workflows/Install/badge.svg)](https://github.com/TheLartians/ModernCppStarter/actions)
+[![MacOS](https://github.com/LevyMatanTheLartians/ModernCppStarterrkflows/macos.yml/badge.svg)](https://github.comTheLartians/ModernCppStarteractions/workflows/macos.yml)
+[![Ubuntu](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/ubuntu.yml/badge.svg)](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/ubuntu.yml)
+[![Style](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/style.yml/badge.svg)](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/style.yml)
+[![Install](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/install.yml/badge.svg)](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/install.yml)
+[![Standalone](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/standalone.yml/badge.svg)](https://github.com/LevyMatan/UltimateFWlogger/actions/workflows/standalone.yml)
 [![codecov](https://codecov.io/gh/TheLartians/ModernCppStarter/branch/master/graph/badge.svg)](https://codecov.io/gh/TheLartians/ModernCppStarter)
 
 # Ultimate Firmware Logger
