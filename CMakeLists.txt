@@ -45,11 +45,16 @@ file(GLOB_RECURSE sources CONFIGURE_DEPENDS "${CMAKE_CURRENT_SOURCE_DIR}/source/
 # Note: for header-only libraries change all PUBLIC flags to INTERFACE and create an interface
 # target: add_library(${PROJECT_NAME} INTERFACE)
 add_library(${PROJECT_NAME} ${headers} ${sources})
-set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
+# set_target_properties(${PROJECT_NAME} PROPERTIES CXX_STANDARD 17)
 
 # being a cross-platform target, we enforce standards conformance on MSVC
 target_compile_options(${PROJECT_NAME} PUBLIC "$<$<COMPILE_LANG_AND_ID:CXX,MSVC>:/permissive->")
-
+target_compile_options(${PROJECT_NAME} PUBLIC -Wno-gnu-zero-variadic-macro-arguments)
+if(CMAKE_BUILD_TYPE STREQUAL "Debug")
+  target_compile_definitions(${PROJECT_NAME} PRIVATE DEBUG_ENABLE=1)
+endif()
+get_target_property(MY_PROJECT_COMPILE_OPTIONS ${PROJECT_NAME} COMPILE_OPTIONS)
+message(STATUS "Compile options: ${MY_PROJECT_COMPILE_OPTIONS}")
 # Link dependencies
 # target_link_libraries(${PROJECT_NAME} PRIVATE fmt::fmt)
 

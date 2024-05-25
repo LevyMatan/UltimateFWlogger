@@ -27,7 +27,9 @@ SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #define UTHASH_VERSION 2.3.0
 
 #include <stddef.h> /* ptrdiff_t */
+#ifndef __APPLE__
 #include <stdlib.h> /* exit */
+#endif
 #include <string.h> /* memcmp, memset, strlen */
 
 #if defined(HASH_DEFINE_OWN_STDINT) && HASH_DEFINE_OWN_STDINT

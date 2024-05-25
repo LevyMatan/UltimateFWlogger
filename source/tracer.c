@@ -96,7 +96,7 @@ trace_status_e load_function_table(const char *csv_filename) {
         char *tmp = strdup(line);
         char *index_str = strtok(tmp, ",");
         char *func_name = strtok(NULL, ",");
-        char *file = strtok(NULL, ",");  // We're not using this in the current function
+        // char *file = strtok(NULL, ",");  // We're not using this in the current function
         char *is_enabled_str = strtok(NULL, ",");
         int index = atoi(index_str);
         int is_enabled_int = atoi(is_enabled_str);
@@ -115,7 +115,7 @@ trace_status_e load_function_table(const char *csv_filename) {
  * @return trace_status_e
  */
 trace_status_e init_tracer(const char *conf_file_path) {
-#ifdef DEBUG_ENABLED
+#ifdef DEBUG_ENABLE
     trace_status_e e_status = load_function_table(conf_file_path);
     return e_status;
 #else

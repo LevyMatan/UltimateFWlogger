@@ -31,14 +31,14 @@ static uint32_t g_events_pushed_count = 0;
 */
 /**
  * @brief Starts the device.
- * 
+ *
  * This function initializes the tracer, initializes the device,
  * starts the state machines, and returns 0.
- * 
+ *
  * @return 0 if the device starts successfully.
  */
 int start_device(void) {
-    
+
     // Initialize the tracer
     trace_status_e status = init_tracer("/workspaces/simple_compiler_project/trace_db.csv");
     handle_tracer_status(status);

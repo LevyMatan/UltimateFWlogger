@@ -1,5 +1,9 @@
+// #ifndef __APPLE__
 #include <stdio.h>
+// #endif
 
+
+#include <stdint.h>
 #include <string.h>
 
 #include "./generated_enum.h"
@@ -7,40 +11,40 @@
 char type_val_string[1000];
 
 char* get_trace_level_name(void* p_type) {
-    int type = *(int*)p_type;
-    if (type < 0 || type >= sizeof(trace_level_dict) / sizeof(trace_level_dict[0])) {
-        return "Invalid type";
-    }
+        uint32_t type = *(uint32_t*)p_type;
+        if (type >= sizeof(trace_level_dict) / sizeof(trace_level_dict[0])) {
+            return "Invalid type";
+        }
     return trace_level_dict[type];
 }
 
 char* get_trace_status_name(void* p_type) {
-    int type = *(int*)p_type;
-    if (type < 0 || type >= sizeof(trace_status_dict) / sizeof(trace_status_dict[0])) {
+    uint32_t type = *(uint32_t*)p_type;
+    if (type >= sizeof(trace_status_dict) / sizeof(trace_status_dict[0])) {
         return "Invalid type";
     }
     return trace_status_dict[type];
 }
 
 char* get_state_machines_types_name(void* p_type) {
-    int type = *(int*)p_type;
-    if (type < 0 || type >= sizeof(state_machines_types_dict) / sizeof(state_machines_types_dict[0])) {
+    uint32_t type = *(uint32_t*)p_type;
+    if (type >= sizeof(state_machines_types_dict) / sizeof(state_machines_types_dict[0])) {
         return "Invalid type";
     }
     return state_machines_types_dict[type];
 }
 
 char* get_main_state_machine_events_name(void* p_type) {
-    int type = *(int*)p_type;
-    if (type < 0 || type >= sizeof(main_state_machine_events_dict) / sizeof(main_state_machine_events_dict[0])) {
+    uint32_t type = *(uint32_t*)p_type;
+    if (type >= sizeof(main_state_machine_events_dict) / sizeof(main_state_machine_events_dict[0])) {
         return "Invalid type";
     }
     return main_state_machine_events_dict[type];
 }
 
 char* get_state_machine_states_name(void* p_type) {
-    int type = *(int*)p_type;
-    if (type < 0 || type >= sizeof(state_machine_states_dict) / sizeof(state_machine_states_dict[0])) {
+    uint32_t type = *(uint32_t*)p_type;
+    if (type >= sizeof(state_machine_states_dict) / sizeof(state_machine_states_dict[0])) {
         return "Invalid type";
     }
     return state_machine_states_dict[type];

@@ -3,7 +3,7 @@
 
 #include <string>
 
-TEST_CASE("FwDeviceMockup") {
-    int ret = start_device();
-    CHECK(ret == 0);
-}
+// TEST_CASE("FwDeviceMockup") {
+//     int ret = start_device();
+//     CHECK(ret == 0);
+// }

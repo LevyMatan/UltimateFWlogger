@@ -1,7 +1,7 @@
 #include <state_machine/state_machine.h>
 #include <tracer.h>
 #include <unistd.h>
-
+#include <stdlib.h>
 
 // Global array to hold all state machines:
 static state_machine_t state_machines[] = {
@@ -11,10 +11,10 @@ static state_machine_t state_machines[] = {
 
 
 void main_state_machine(int event) {
-    
+
     // Cache the current state
     state_machine_states_e current_state = state_machines[MAIN_STATE_MACHINE].state;
-    
+
     // Main state machine
     FW_LOG_INFO("Entered Main state machine at state: %s with event: %s", ENUM_STRING(current_state), ENUM_STRING_FROM_TYPE(event, "main_state_machine_events"));
 
@@ -73,7 +73,7 @@ void enqueue_event(state_machine_event_queue_t *event_queue, state_machine_event
         return;
     }
     FW_LOG_INFO("Enqueuing event: %d for state_machine: %d", event.event, event.type);
-    
+
     int write_index = (event_queue->head + event_queue->count) % event_queue->size;
     if(event_queue->count + 1 >= event_queue->size) {
         FW_LOG_ERROR("Event queue is full. Will override the newest event.");
@@ -97,7 +97,7 @@ void handle_event_queue(state_machine_event_queue_t *event_queue)
         return;
     }
 
-    FW_LOG_DEBUG("Handling event queue...");
+    FW_LOG_INFO("Handling event queue...");
 
     while (event_queue->count > 0) {
         state_machine_event_t event = event_queue->events[event_queue->head];
