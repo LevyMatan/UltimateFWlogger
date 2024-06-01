@@ -1,9 +1,21 @@
+"""
+This module defines the Log class, which represents a log entry in the database.
+
+The Log class provides attributes and methods to store and manipulate log entries.
+
+Example usage:
+    # Create a new log entry
+    log = Log(123456789, 'example.py', 42, 'example_function', 'INFO', FW_LOG_MODULE_TYPE.LOG_MOD_FDB, 'This is an example log message.')
+    print(log)
+    print(log.to_dict())
+"""
+
 from sqlalchemy import Column, Integer, String, Enum, Sequence
 from sqlalchemy.orm import declarative_base
 from dev_interactions import FW_LOG_MODULE_TYPE
 
 Base = declarative_base()
-# logging.basicConfig(level=logging.DEBUG)
+
 class Log(Base):
     """
     Represents a log entry in the database.
@@ -70,7 +82,7 @@ class Log(Base):
         log_dict['file_line'] = f"{log_dict['file']}:{log_dict['line']}"
         log_dict['log_group'] = log_dict['log_group'].name
         return log_dict
-    
+
 
 if __name__ == '__main__':
     # Create a new log entry
